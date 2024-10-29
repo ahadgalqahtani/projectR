@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class Main2 extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText et_email, et_password;
-
+//raghad
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
