@@ -87,7 +87,7 @@ public class SignUp extends AppCompatActivity {
         }
         // Validate Employee ID
         if (employeeID.isEmpty() || !isValidEmployeeID(employeeID)) {
-            et_employeeID.setError("Employee ID must be 6 digits long and numeric");
+            et_employeeID.setError("Employee ID must be 7 digits long and numeric");
             et_employeeID.requestFocus();
             return false;
         }
