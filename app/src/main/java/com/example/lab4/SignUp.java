@@ -85,13 +85,15 @@ public class SignUp extends AppCompatActivity {
             et_fullName.requestFocus();
             return false;
         }
-        if (employeeID.isEmpty()) {
-            et_employeeID.setError("Employee ID is required");
+        // Validate Employee ID
+        if (employeeID.isEmpty() || !isValidEmployeeID(employeeID)) {
+            et_employeeID.setError("Employee ID must be 6 digits long and numeric");
             et_employeeID.requestFocus();
             return false;
         }
-        if (phoneNumber.isEmpty()) {
-            et_phoneNumber.setError("Phone number is required");
+        // Validate Phone Number
+        if (phoneNumber.isEmpty() || !isValidPhoneNumber(phoneNumber)) {
+            et_phoneNumber.setError("Phone number must be 10 digits long and numeric");
             et_phoneNumber.requestFocus();
             return false;
         }
@@ -106,6 +108,16 @@ public class SignUp extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    // Check if Employee ID is valid (6 digits)
+    private boolean isValidEmployeeID(String employeeID) {
+        return employeeID.matches("\\d{7}"); // Matches exactly 6 digits
+    }
+
+    // Check if Phone Number is valid (10 digits)
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        return phoneNumber.matches("\\d{10}"); // Matches exactly 10 digits
     }
 
     // Save user data to Firebase Realtime Database
