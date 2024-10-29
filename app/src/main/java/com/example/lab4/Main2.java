@@ -59,7 +59,7 @@ public class Main2 extends AppCompatActivity {
                         String errorMessage = task.getException() != null
                                 ? task.getException().toString()
                                 : "Login failed.";
-                        Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "This account is not registered, please register.", Toast.LENGTH_LONG).show();
                     }
                 });
     }
