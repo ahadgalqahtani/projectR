@@ -55,7 +55,7 @@
             android:id="@+id/spinnerOrderType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/order_type_options"
+            android:entries="@array/Locations"
             android:hint="Order Type" />
 
         <Button
