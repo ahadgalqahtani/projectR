@@ -8,7 +8,6 @@
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".Manger">
-<!--asma    -->
     <TextView
         android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
@@ -18,7 +17,7 @@
         android:textStyle="bold"
         android:layout_gravity="center"
         android:paddingBottom="16dp" />
-
+<!--2211010-->
     <Button
         android:id="@+id/buttonCreateOrder"
         android:layout_width="match_parent"
