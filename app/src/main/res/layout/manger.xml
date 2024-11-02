@@ -10,7 +10,7 @@
     android:padding="16dp"
     tools:context="Manger">
 
-<!--    joud -->
+<!--    joud1 -->
     <TextView
         android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
