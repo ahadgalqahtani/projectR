@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Order"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:paddingBottom="16dp" />
+
+        <EditText
+            android:id="@+id/editTextOrderId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Order ID" />
+
+        <EditText
+            android:id="@+id/editTextDeliveryDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Delivery Date (YYYY-MM-DD)" />
+
+        <EditText
+            android:id="@+id/editTextCustomerDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Customer Details" />
+
+        <EditText
+            android:id="@+id/editTextOrderAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="Order Amount" />
+
+        <EditText
+            android:id="@+id/editTextOrderWeight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:hint="Order Weight (kg)" />
+
+        <Spinner
+            android:id="@+id/spinnerOrderType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/Locations"
+            android:hint="Order Type" />
+
+        <Button
+            android:id="@+id/buttonSubmitOrder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit Order"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+</ScrollView>
