@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".Manger">
-<!--asma-->
+<!--asma    -->
     <TextView
         android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
