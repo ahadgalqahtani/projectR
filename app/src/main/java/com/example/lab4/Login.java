@@ -71,7 +71,6 @@ public class Login extends AppCompatActivity {
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     // Print the entire snapshot data for debugging
                                     System.out.println("DataSnapshot: " + snapshot.toString());
-
                                     if (snapshot.exists() && snapshot.hasChild("role")) {
                                         String role = snapshot.child("role").getValue(String.class);
                                         if ("Manager".equals(role)) {
@@ -90,7 +89,6 @@ public class Login extends AppCompatActivity {
                                         Toast.makeText(Login.this, "Role not found in database.", Toast.LENGTH_SHORT).show();
                                     }
                                 }
-
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
                                     Toast.makeText(Login.this, "Failed to retrieve role.", Toast.LENGTH_SHORT).show();

@@ -12,7 +12,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create Order"
+            android:text="@string/createO"
             android:textSize="24sp"
             android:textStyle="bold"
             android:layout_gravity="center"
@@ -20,49 +20,58 @@
 
         <EditText
             android:id="@+id/editTextOrderId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Order ID" />
+            android:layout_width="488dp"
+            android:layout_height="48dp"
+            android:hint="@string/orderID"
+            android:inputType="number"
+            android:autofillHints="none"/>
 
         <EditText
             android:id="@+id/editTextDeliveryDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Delivery Date (YYYY-MM-DD)" />
+            android:layout_width="488dp"
+            android:layout_height="48dp"
+            android:hint="@string/date"
+            android:autofillHints="none"
+            android:inputType="date"/>
 
         <EditText
             android:id="@+id/editTextCustomerDetails"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Customer Details" />
+            android:layout_width="488dp"
+            android:layout_height="48dp"
+            android:hint="@string/customerDet"
+            android:autofillHints="none"
+            android:inputType="text"/>
 
         <EditText
             android:id="@+id/editTextOrderAmount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="488dp"
+            android:layout_height="48dp"
             android:inputType="number"
-            android:hint="Order Amount" />
+            android:hint="@string/OrAmount"
+            android:autofillHints="none"/>
 
         <EditText
             android:id="@+id/editTextOrderWeight"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="488dp"
+            android:layout_height="48dp"
             android:inputType="numberDecimal"
-            android:hint="Order Weight (kg)" />
+            android:hint="@string/OrWeight"
+            android:autofillHints="none"/>
 
         <Spinner
             android:id="@+id/spinnerOrderType"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Order Type" />
+            android:layout_height="48dp"
+            android:hint="@string/OrType" />
         <!--android:entries="@array/Locations"-->
-
-
+        
         <Button
             android:id="@+id/buttonSubmitOrder"
-            android:layout_width="match_parent"
+            android:layout_width="320dp"
+            android:gravity="center"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"
-            android:text="Submit Order"
+            android:text="@string/Sub"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:backgroundTint="#FF5722"
