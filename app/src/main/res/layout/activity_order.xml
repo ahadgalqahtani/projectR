@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -55,15 +54,20 @@
             android:id="@+id/spinnerOrderType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/Locations"
             android:hint="Order Type" />
+        <!--android:entries="@array/Locations"-->
+
 
         <Button
             android:id="@+id/buttonSubmitOrder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Submit Order"
-            android:layout_marginTop="16dp" />
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:backgroundTint="#FF5722"
+            android:layout_marginBottom="16dp"
+             />
 
     </LinearLayout>
 </ScrollView>

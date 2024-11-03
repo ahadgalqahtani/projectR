@@ -1,60 +1,38 @@
 package com.example.lab4;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import java.util.Date;
+import java.util.UUID;
 
-    public class Manger extends AppCompatActivity {
+public class Manger extends AppCompatActivity {
 
-        private EditText editTextOrderId, editTextDeliveryDate, editTextCustomerDetails, editTextOrderAmount, editTextOrderWeight;
-        private Spinner spinnerOrderType;
-        private Button buttonSubmitOrder;
+    private DatabaseReference ordersDatabase;
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.manger);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_manger);
 
-            // Initialize the views
-            editTextOrderId = findViewById(R.id.editTextOrderId);
-            editTextDeliveryDate = findViewById(R.id.editTextDeliveryDate);
-            editTextCustomerDetails = findViewById(R.id.editTextCustomerDetails);
-            editTextOrderAmount = findViewById(R.id.editTextOrderAmount);
-            editTextOrderWeight = findViewById(R.id.editTextOrderWeight);
-            spinnerOrderType = findViewById(R.id.spinnerOrderType);
-            buttonSubmitOrder = findViewById(R.id.buttonSubmitOrder);
-
-            buttonSubmitOrder.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Fetch user input
-                    String orderId = editTextOrderId.getText().toString();
-                    String deliveryDate = editTextDeliveryDate.getText().toString();
-                    String customerDetails = editTextCustomerDetails.getText().toString();
-                    String orderAmount = editTextOrderAmount.getText().toString();
-                    String orderWeight = editTextOrderWeight.getText().toString();
-                    String orderType = spinnerOrderType.getSelectedItem().toString();
-
-                    // Perform validation (basic example)
-                    if (orderId.isEmpty() || deliveryDate.isEmpty() || customerDetails.isEmpty() ||
-                            orderAmount.isEmpty() || orderWeight.isEmpty()) {
-                        Toast.makeText(Manger.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    // Process the order creation (you may want to send it to a database or another screen)
-                    Toast.makeText(Manger.this, "Order Created Successfully", Toast.LENGTH_SHORT).show();
-
-                    // Go back to the Supervisor dashboard
-                    finish();
-                }
-            });
-        }
+        // Initialize Firebase reference for orders
+        ordersDatabase = FirebaseDatabase.getInstance().getReference("orders");
     }
+
+    // Method called when Create Order button is clicked
+    public void createOrder(View view) {
+
+        Intent intent = new Intent(Manger.this, Order.class);
+        startActivity(intent);
+    }
+
+}
+
+
 
 

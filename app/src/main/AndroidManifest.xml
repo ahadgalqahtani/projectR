@@ -16,6 +16,12 @@
             android:name=".Order"
             android:exported="false" />
         <activity
+            android:name=".Driver"
+            android:exported="false" />
+        <activity
+            android:name=".Manger"
+            android:exported="false" />
+        <activity
             android:name=".SignUp"
             android:exported="false" />
         <activity

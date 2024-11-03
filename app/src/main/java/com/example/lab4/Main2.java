@@ -1,5 +1,6 @@
 package com.example.lab4;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,9 +9,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Main2 extends AppCompatActivity {
     private FirebaseAuth mAuth;
+    private DatabaseReference userDatabase;
     private EditText et_email, et_password;
 
     @Override
@@ -19,6 +27,8 @@ public class Main2 extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
 
         mAuth = FirebaseAuth.getInstance();
+        userDatabase = FirebaseDatabase.getInstance().getReference("users");
+
         et_email = findViewById(R.id.email_Login);
         et_password = findViewById(R.id.password_Login);
     }
@@ -53,12 +63,32 @@ public class Main2 extends AppCompatActivity {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(getApplicationContext(), "CORRECT!", Toast.LENGTH_LONG).show();
-                        // You can redirect to another page here, e.g., startActivity(new Intent(this, MainPage.class));
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            // Check the user's role in the database
+                            userDatabase.child(user.getUid()).child("role").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    String role = snapshot.getValue(String.class);
+                                    if ("Manager".equals(role)) {
+                                        // Redirect to Manager activity
+                                        Intent manager = new Intent(Main2.this, Manger.class);
+                                        startActivity(manager);
+                                    } else {
+                                        // Redirect to another activity if needed (e.g., DriverActivity)
+                                        Intent driver = new Intent(Main2.this, Driver.class);
+                                        startActivity(driver);
+                                    }
+                                    finish(); // Finish login activity
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Toast.makeText(Main2.this, "Failed to retrieve role.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
                     } else {
-                        String errorMessage = task.getException() != null
-                                ? task.getException().toString()
-                                : "Login failed.";
                         Toast.makeText(getApplicationContext(), "This account is not registered, please register.", Toast.LENGTH_LONG).show();
                     }
                 });
