@@ -64,7 +64,7 @@
             android:layout_height="48dp"
             android:hint="@string/OrType" />
         <!--android:entries="@array/Locations"-->
-        
+
         <Button
             android:id="@+id/buttonSubmitOrder"
             android:layout_width="320dp"

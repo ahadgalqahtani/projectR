@@ -6,7 +6,7 @@
     <string name="createO">Create Order</string>
     <string name="orderID">Order ID</string>
     <string name="date">Delivery Date (YYYY-MM-DD)</string>
-    <string name="customerDet">Delivery Date (YYYY-MM-DD)</string>
+    <string name="customerDet">Customer Details</string>
     <string name="OrAmount">Order Amount</string>
     <string name="OrWeight">Order Weight (kg)</string>
     <string name="OrType">Order Type</string>
