@@ -16,7 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class Main2 extends AppCompatActivity {
+public class Login extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference userDatabase;
     private EditText et_email, et_password;
@@ -24,7 +24,7 @@ public class Main2 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
         userDatabase = FirebaseDatabase.getInstance().getReference("users");
@@ -72,11 +72,11 @@ public class Main2 extends AppCompatActivity {
                                     String role = snapshot.getValue(String.class);
                                     if ("Manager".equals(role)) {
                                         // Redirect to Manager activity
-                                        Intent manager = new Intent(Main2.this, Manger.class);
+                                        Intent manager = new Intent(Login.this, Manager.class);
                                         startActivity(manager);
                                     } else {
                                         // Redirect to another activity if needed (e.g., DriverActivity)
-                                        Intent driver = new Intent(Main2.this, Driver.class);
+                                        Intent driver = new Intent(Login.this, Driver.class);
                                         startActivity(driver);
                                     }
                                     finish(); // Finish login activity
@@ -84,7 +84,7 @@ public class Main2 extends AppCompatActivity {
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
-                                    Toast.makeText(Main2.this, "Failed to retrieve role.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Login.this, "Failed to retrieve role.", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }

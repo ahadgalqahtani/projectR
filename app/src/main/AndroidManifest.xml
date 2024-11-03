@@ -19,13 +19,13 @@
             android:name=".Driver"
             android:exported="false" />
         <activity
-            android:name=".Manger"
+            android:name=".Manager"
             android:exported="false" />
         <activity
             android:name=".SignUp"
             android:exported="false" />
         <activity
-            android:name=".Main2"
+            android:name=".Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
