@@ -28,7 +28,6 @@ public class Manager extends AppCompatActivity {
         Intent intent = new Intent(Manager.this, Order.class);
         startActivity(intent);
     }
-
 }
 
 

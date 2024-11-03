@@ -121,9 +121,9 @@ public class SignUp extends AppCompatActivity {
     }
 
     // Save user data to Firebase Realtime Database
+    // Save user data to Firebase Realtime Database
     private void saveUserToDatabase(String uid, User user) {
-        String employeeID = et_employeeID.getText().toString().trim();
-        userDatabase.child(employeeID).setValue(user)
+        userDatabase.child(uid).setValue(user) // Use UID as the key
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "User registered successfully!", Toast.LENGTH_LONG).show();

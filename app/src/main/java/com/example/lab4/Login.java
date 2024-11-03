@@ -66,20 +66,29 @@ public class Login extends AppCompatActivity {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
                             // Check the user's role in the database
-                            userDatabase.child(user.getUid()).child("role").addListenerForSingleValueEvent(new ValueEventListener() {
+                            userDatabase.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    String role = snapshot.getValue(String.class);
-                                    if ("Manager".equals(role)) {
-                                        // Redirect to Manager activity
-                                        Intent manager = new Intent(Login.this, Manager.class);
-                                        startActivity(manager);
+                                    // Print the entire snapshot data for debugging
+                                    System.out.println("DataSnapshot: " + snapshot.toString());
+
+                                    if (snapshot.exists() && snapshot.hasChild("role")) {
+                                        String role = snapshot.child("role").getValue(String.class);
+                                        if ("Manager".equals(role)) {
+                                            // Redirect to Manager activity
+                                            Intent manager = new Intent(Login.this, Manager.class);
+                                            startActivity(manager);
+                                        } else if ("Driver".equals(role)) {
+                                            // Redirect to Driver activity
+                                            Intent driver = new Intent(Login.this, Driver.class);
+                                            startActivity(driver);
+                                        } else {
+                                            Toast.makeText(Login.this, "Unknown role type.", Toast.LENGTH_SHORT).show();
+                                        }
+                                        finish(); // Finish login activity
                                     } else {
-                                        // Redirect to another activity if needed (e.g., DriverActivity)
-                                        Intent driver = new Intent(Login.this, Driver.class);
-                                        startActivity(driver);
+                                        Toast.makeText(Login.this, "Role not found in database.", Toast.LENGTH_SHORT).show();
                                     }
-                                    finish(); // Finish login activity
                                 }
 
                                 @Override
