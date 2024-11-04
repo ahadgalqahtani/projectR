@@ -11,4 +11,6 @@
     <string name="OrWeight">Order Weight (kg)</string>
     <string name="OrType">Order Type</string>
     <string name="Sub">Submit Order</string>
+    <string name="ChooseD">Choose The Driver</string>
+    <string name="ChooseCity">Choose The City</string>
 </resources>
