@@ -41,16 +41,6 @@
         android:layout_marginBottom="16dp" />
 
     <Button
-        android:id="@+id/buttonAssignDriver"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="Assign Driver"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:backgroundTint="#FF5722"
-        android:layout_marginBottom="16dp" />
-
-    <Button
         android:id="@+id/buttonTrackOrder"
         android:layout_width="match_parent"
         android:layout_height="48dp"

@@ -58,8 +58,36 @@
             android:hint="@string/OrWeight"
             android:autofillHints="none"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ChooseD"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#FF5722"
+            android:layout_gravity="start"
+            android:paddingTop="15dp"
+            android:paddingBottom="1dp" />
+
         <Spinner
-            android:id="@+id/spinnerOrderType"
+            android:id="@+id/AssignDriverSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="@string/OrType"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ChooseCity"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#FF5722"
+            android:layout_gravity="start"
+            android:paddingBottom="1dp" />
+
+        <Spinner
+            android:id="@+id/spinnerCity"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="@string/OrType" />
