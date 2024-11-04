@@ -16,6 +16,20 @@
         android:gravity="center_horizontal"
         tools:context=".SignUpActivity">
 
+        <ImageButton
+            android:id="@+id/returnIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="left"
+            android:background="#FFFFFF"
+            android:contentDescription="TODO"
+            android:onClick="onClick"
+            android:src="@drawable/img"
+
+            /><!-- replace with your own icon -->
+
+
+
         <!-- Banner or App Title -->
         <TextView
             android:id="@+id/banner"
