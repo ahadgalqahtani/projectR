@@ -1,10 +1,14 @@
 package com.example.lab4;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.util.Log;
@@ -139,4 +143,15 @@ public class SignUp extends AppCompatActivity {
         String errorMessage = e != null ? e.getMessage() : defaultMsg;
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
     }
-}
+
+
+        public void onClick (View view)
+        {
+            ImageButton returnIcon = findViewById(R.id.returnIcon);
+            Intent intent = new Intent(SignUp.this, Login.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+
+
+        }
+    }
