@@ -13,4 +13,9 @@
     <string name="Sub">Submit Order</string>
     <string name="ChooseD">Choose The Driver</string>
     <string name="ChooseCity">Choose The City</string>
+    <string name="selectStores">Select Stores</string>
+    <string-array name="cities_array">
+        <item>Jeddah</item>
+        <item>Makkah</item>
+    </string-array>
 </resources>

@@ -1,7 +1,10 @@
 package com.example.lab4;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -88,12 +91,51 @@ public class Order extends AppCompatActivity {
                     return;
                 }
 
+
+
+
+
+
                 // Process the order creation (you may want to send it to a database or another screen)
                 Toast.makeText(Order.this, "Order Created Successfully", Toast.LENGTH_SHORT).show();
 
                 // Go back to the Supervisor dashboard
+
+
+
                 finish();
             }
         });
+
+        spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            private boolean isFirstSelection = true; // Flag to track initial selection
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Skip the first (default) selection
+                if (isFirstSelection) {
+                    isFirstSelection = false;
+                    return;
+                }
+
+                // Retrieve the selected city
+                String selectedCity = parent.getItemAtPosition(position).toString();
+
+                // Start the appropriate activity based on selection
+                if (selectedCity.equals("Jeddah")) {
+                    Intent intent = new Intent(Order.this, JeddahstoresActivity.class);
+                    startActivity(intent);
+                } else if (selectedCity.equals("Makkah")) {
+                    Intent intent = new Intent(Order.this, MakkahstoresActivity.class);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+
     }
 }

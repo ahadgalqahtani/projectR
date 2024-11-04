@@ -90,8 +90,7 @@
             android:id="@+id/spinnerCity"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="@string/OrType" />
-        <!--android:entries="@array/Locations"-->
+            android:entries="@array/cities_array" />
 
         <Button
             android:id="@+id/buttonSubmitOrder"
@@ -104,7 +103,7 @@
             android:textSize="20sp"
             android:backgroundTint="#FF5722"
             android:layout_marginBottom="16dp"
-             />
+            />
 
     </LinearLayout>
 </ScrollView>

@@ -78,7 +78,9 @@
                     android:text="Done"
                     android:layout_marginTop="16dp"
                     android:backgroundTint="#FF5722"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:onClick="onDoneButtonClick"/>  <!-- Add this line -->
+
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
