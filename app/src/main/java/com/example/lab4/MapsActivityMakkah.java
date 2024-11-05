@@ -1,17 +1,18 @@
 package com.example.lab4;
 
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -125,17 +127,21 @@ public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyC
 
     // Method triggered when the "Done" button is clicked
     public void onDoneButtonClick(View view) {
-        StringBuilder selectedStores = new StringBuilder("Selected Stores:\n");
+        StringBuilder selectedStores = new StringBuilder();
 
         if (((CheckBox) findViewById(R.id.store1)).isChecked()) selectedStores.append("Danube\n");
         if (((CheckBox) findViewById(R.id.store2)).isChecked()) selectedStores.append("Panda\n");
         if (((CheckBox) findViewById(R.id.store3)).isChecked()) selectedStores.append("Othaim\n");
 
-        if (selectedStores.toString().equals("Selected Stores:\n")) {
+        if (selectedStores.length() == 0) {
             Toast.makeText(this, "No stores selected", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, selectedStores.toString(), Toast.LENGTH_LONG).show();
+            Intent intent = new Intent();
+            intent.putExtra("selectedStores", selectedStores.toString().trim());
+            setResult(RESULT_OK, intent);  // Return result to Order activity
+            finish(); // End this activity and return
         }
     }
+
 }
 
