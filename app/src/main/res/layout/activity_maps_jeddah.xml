@@ -16,6 +16,7 @@
         android:layout_height="300dp"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <!-- ScrollView containing the card and checklist -->
 <ScrollView
 android:layout_width="match_parent"
@@ -93,6 +94,7 @@ android:padding="16dp">
             android:backgroundTint="#FF5722"
             android:textColor="@android:color/white"
             android:onClick="onDoneButtonClick"/>
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>
 </ScrollView>
