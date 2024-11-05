@@ -26,7 +26,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyCallback
+{
 
     private GoogleMap mMap;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;

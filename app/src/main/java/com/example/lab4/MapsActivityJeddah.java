@@ -21,7 +21,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyCallback
+{
 
     private GoogleMap mMap;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -41,7 +42,7 @@ public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyC
 
         // Initialize the map fragment
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.jmap);
+                .findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
@@ -93,9 +94,9 @@ public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyC
 
     // Set up listeners for each CheckBox
     private void setupCheckBoxListeners() {
-        CheckBox store1 = findViewById(R.id.Jstore1);
-        CheckBox store2 = findViewById(R.id.Jstore2);
-        CheckBox store3 = findViewById(R.id.Jstore3);
+        CheckBox store1 = findViewById(R.id.store1);
+        CheckBox store2 = findViewById(R.id.store2);
+        CheckBox store3 = findViewById(R.id.store3);
 
         store1.setOnCheckedChangeListener((buttonView, isChecked) -> handleMarker(isChecked, "Danube", danubeLocation));
         store2.setOnCheckedChangeListener((buttonView, isChecked) -> handleMarker(isChecked, "Panda", pandaLocation));
@@ -122,9 +123,9 @@ public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyC
     public void onDoneButtonClick(View view) {
         StringBuilder selectedStores = new StringBuilder("Selected Stores:\n");
 
-        if (((CheckBox) findViewById(R.id.Jstore1)).isChecked()) selectedStores.append("Danube\n");
-        if (((CheckBox) findViewById(R.id.Jstore2)).isChecked()) selectedStores.append("Panda\n");
-        if (((CheckBox) findViewById(R.id.Jstore3)).isChecked()) selectedStores.append("Othaim\n");
+        if (((CheckBox) findViewById(R.id.store1)).isChecked()) selectedStores.append("Danube\n");
+        if (((CheckBox) findViewById(R.id.store2)).isChecked()) selectedStores.append("Panda\n");
+        if (((CheckBox) findViewById(R.id.store3)).isChecked()) selectedStores.append("Othaim\n");
 
         if (selectedStores.toString().equals("Selected Stores:\n")) {
             Toast.makeText(this, "No stores selected", Toast.LENGTH_SHORT).show();
