@@ -11,12 +11,18 @@
     <string name="OrWeight">Order Weight (kg)</string>
     <string name="OrType">Order Type</string>
     <string name="Sub">Submit Order</string>
+    <string name="city">Choose City</string>
+    <string name="driver">Choose Driver</string>
+    <string name="done">Done</string>
+    <string name="Jstores">Jeddah Supermarkets</string>
+    <string name="dan">Danube</string>
+    <string name="panda">Panda</string>
+    <string name="othaim">Othaim</string>
+    <string-array name="drivers">
+        <item>-</item>
+    </string-array>
     <string-array name="cities_array">
-        <item>Chose city</item>
         <item>Jeddah</item>
         <item>Makkah</item>
     </string-array>
-    <string name="title_activity_maps_jeddah">MapsActivityJeddah</string>
-
-
 </resources>

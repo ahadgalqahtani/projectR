@@ -39,16 +39,13 @@ android {
 
 dependencies {
     implementation(libs.appcompat)
-    implementation(libs.material)
+    implementation(libs.material)  // Using the existing version catalog reference for Material Components
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
-    implementation ("com.google.android.gms:play-services-maps:19.0.0") // For Google Maps
-    implementation ("com.google.android.material:material:1.12.0")
+    implementation(libs.play.services.maps)  // Using the existing version catalog reference for Google Maps
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
-
 }
