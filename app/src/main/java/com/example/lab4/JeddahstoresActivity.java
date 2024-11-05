@@ -29,4 +29,5 @@ public class JeddahstoresActivity extends AppCompatActivity {
             }
         });
     }
+
 }
