@@ -44,8 +44,8 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
-    implementation ("com.google.android.gms:play-services-maps:18.0.2") // For Google Maps
-    implementation ("com.google.android.material:material:1.7.0")
+    implementation ("com.google.android.gms:play-services-maps:19.0.0") // For Google Maps
+    implementation ("com.google.android.material:material:1.12.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
