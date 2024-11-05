@@ -1,18 +1,15 @@
 package com.example.lab4;
 
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,7 +27,7 @@ public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyC
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     // Store markers to control adding and removing
-    private Map<String, Marker> storeMarkers = new HashMap<>();
+    private final Map<String, Marker> storeMarkers = new HashMap<>();
 
     // Define store locations
     private final LatLng danubeLocation = new LatLng(21.622786775243604, 39.15280598143593); // Example coordinates for Danube
@@ -40,11 +37,11 @@ public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps); // Make sure this matches your XML filename
+        setContentView(R.layout.activity_maps_jeddah); // Make sure this matches your XML filename
 
         // Initialize the map fragment
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.jmap);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
@@ -71,10 +68,8 @@ public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyC
             mMap.setMyLocationEnabled(true);
         }
 
-        // Center the map on Makkah
-        LatLng makkah = new LatLng(21.3891, 39.8579);
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(makkah, 12));
+        LatLng jeddah = new LatLng(21.4858, 39.1925);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(jeddah, 12));
     }
 
     // Handle the results of permission requests
@@ -98,9 +93,9 @@ public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyC
 
     // Set up listeners for each CheckBox
     private void setupCheckBoxListeners() {
-        CheckBox store1 = findViewById(R.id.store1);
-        CheckBox store2 = findViewById(R.id.store2);
-        CheckBox store3 = findViewById(R.id.store3);
+        CheckBox store1 = findViewById(R.id.Jstore1);
+        CheckBox store2 = findViewById(R.id.Jstore2);
+        CheckBox store3 = findViewById(R.id.Jstore3);
 
         store1.setOnCheckedChangeListener((buttonView, isChecked) -> handleMarker(isChecked, "Danube", danubeLocation));
         store2.setOnCheckedChangeListener((buttonView, isChecked) -> handleMarker(isChecked, "Panda", pandaLocation));
@@ -127,9 +122,9 @@ public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyC
     public void onDoneButtonClick(View view) {
         StringBuilder selectedStores = new StringBuilder("Selected Stores:\n");
 
-        if (((CheckBox) findViewById(R.id.store1)).isChecked()) selectedStores.append("Danube\n");
-        if (((CheckBox) findViewById(R.id.store2)).isChecked()) selectedStores.append("Panda\n");
-        if (((CheckBox) findViewById(R.id.store3)).isChecked()) selectedStores.append("Othaim\n");
+        if (((CheckBox) findViewById(R.id.Jstore1)).isChecked()) selectedStores.append("Danube\n");
+        if (((CheckBox) findViewById(R.id.Jstore2)).isChecked()) selectedStores.append("Panda\n");
+        if (((CheckBox) findViewById(R.id.Jstore3)).isChecked()) selectedStores.append("Othaim\n");
 
         if (selectedStores.toString().equals("Selected Stores:\n")) {
             Toast.makeText(this, "No stores selected", Toast.LENGTH_SHORT).show();

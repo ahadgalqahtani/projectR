@@ -10,92 +10,91 @@
 
     <!-- Google Map Fragment -->
     <fragment
-        android:id="@+id/map"
+        android:id="@+id/jmap"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <!-- ScrollView containing the card and checklist -->
-<ScrollView
-android:layout_width="match_parent"
-android:layout_height="0dp"
-android:layout_marginTop="16dp"
-android:layout_marginBottom="16dp"
-app:layout_constraintTop_toBottomOf="@id/map"
-app:layout_constraintBottom_toBottomOf="parent"
-android:background="#F9F9F9"
-android:padding="16dp">
-
-<!-- Card for Store Selection Checklist -->
-<androidx.cardview.widget.CardView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="16dp"
-    app:cardElevation="8dp"
-    app:cardCornerRadius="16dp"
-    app:cardBackgroundColor="@color/white">
-
-    <LinearLayout
+            <!-- ScrollView containing the card and checklist -->
+        <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintTop_toBottomOf="@id/jmap"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="#F9F9F9"
         android:padding="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Jeddah Stores"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-medium"
-            android:layout_marginBottom="16dp"/>
+            <!-- Card for Store Selection Checklist -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:cardElevation="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/white">
 
-        <!-- CheckBox for each store -->
-        <CheckBox
-            android:id="@+id/store1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Danube"
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            android:padding="8dp"
-            android:buttonTint="#FF5722" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-        <CheckBox
-            android:id="@+id/store2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Panda"
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            android:padding="8dp"
-            android:buttonTint="#FF5722" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/Jstores"
+                        android:textSize="20sp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-medium"
+                        android:layout_marginBottom="16dp"/>
 
-        <CheckBox
-            android:id="@+id/store3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Othaim"
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            android:padding="8dp"
-            android:buttonTint="#FF5722" />
+                    <!-- CheckBox for each store -->
+                    <CheckBox
+                        android:id="@+id/Jstore1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dan"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:padding="8dp"
+                        android:buttonTint="#FF5722" />
 
-        <!-- Done Button -->
-        <Button
-            android:id="@+id/doneButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Done"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="#FF5722"
-            android:textColor="@android:color/white"
-            android:onClick="onDoneButtonClick"/>
+                    <CheckBox
+                        android:id="@+id/Jstore2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/panda"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:padding="8dp"
+                        android:buttonTint="#FF5722" />
 
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
-</ScrollView>
+                    <CheckBox
+                        android:id="@+id/Jstore3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/othaim"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:padding="8dp"
+                        android:buttonTint="#FF5722" />
+
+                    <!-- Done Button -->
+                    <Button
+                        android:id="@+id/doneButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/done"
+                        android:layout_marginTop="16dp"
+                        android:backgroundTint="#FF5722"
+                        android:textColor="@android:color/white"
+                        android:onClick="onDoneButtonClick"/>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

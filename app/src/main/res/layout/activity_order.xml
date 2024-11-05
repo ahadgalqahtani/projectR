@@ -61,7 +61,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ChooseD"
+            android:text="@string/driver"
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="#FF5722"
@@ -73,13 +73,12 @@
             android:id="@+id/AssignDriverSpinner"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="@string/OrType"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ChooseCity"
+            android:text="@string/city"
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="#FF5722"
