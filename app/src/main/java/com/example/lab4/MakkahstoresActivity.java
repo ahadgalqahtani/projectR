@@ -25,9 +25,7 @@ public class MakkahstoresActivity extends AppCompatActivity {
                 // Navigate to Order Activity
                 Intent intent = new Intent(MakkahstoresActivity.this, Order.class);
                 startActivity(intent);
-
             }
         });
     }
-
 }

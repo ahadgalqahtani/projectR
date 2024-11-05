@@ -11,11 +11,12 @@
     <string name="OrWeight">Order Weight (kg)</string>
     <string name="OrType">Order Type</string>
     <string name="Sub">Submit Order</string>
-    <string name="ChooseD">Choose The Driver</string>
-    <string name="ChooseCity">Choose The City</string>
-    <string name="selectStores">Select Stores</string>
     <string-array name="cities_array">
+        <item>Chose city</item>
         <item>Jeddah</item>
         <item>Makkah</item>
     </string-array>
+    <string name="title_activity_maps_jeddah">MapsActivityJeddah</string>
+
+
 </resources>

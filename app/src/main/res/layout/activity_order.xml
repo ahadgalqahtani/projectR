@@ -61,7 +61,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ChooseD"
+            android:text="ChooseD"
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="#FF5722"
@@ -79,7 +79,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ChooseCity"
+            android:text="ChooseCity"
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="#FF5722"
