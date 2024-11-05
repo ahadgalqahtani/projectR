@@ -2,7 +2,6 @@ package com.example.lab4;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -123,10 +122,10 @@ public class Order extends AppCompatActivity {
 
                 // Start the appropriate activity based on selection
                 if (selectedCity.equals("Jeddah")) {
-                    Intent intent = new Intent(Order.this, JeddahstoresActivity.class);
+                    Intent intent = new Intent(Order.this, MapsActivityJeddah.class);
                     startActivity(intent);
                 } else if (selectedCity.equals("Makkah")) {
-                    Intent intent = new Intent(Order.this, MakkahstoresActivity.class);
+                    Intent intent = new Intent(Order.this, MapsActivityMakkah.class);
                     startActivity(intent);
                 }
             }
