@@ -137,6 +137,7 @@ public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyC
         if (selectedStores.length() == 0) {
             Toast.makeText(this, "No stores selected", Toast.LENGTH_SHORT).show();
         } else {
+            Toast.makeText(this, selectedStores.toString(), Toast.LENGTH_LONG).show();
             Intent intent = new Intent();
             intent.putExtra("selectedStores", selectedStores.toString().trim());
             setResult(RESULT_OK, intent);  // Return result to Order activity

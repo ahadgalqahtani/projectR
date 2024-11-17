@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
@@ -130,6 +131,10 @@ public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyC
             Toast.makeText(this, "No stores selected", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, selectedStores.toString(), Toast.LENGTH_LONG).show();
+            Intent intent = new Intent();
+            intent.putExtra("selectedStores", selectedStores.toString().trim());
+            setResult(RESULT_OK, intent);  // Return result to Order activity
+            finish(); // End this activity and return
         }
     }
 }
