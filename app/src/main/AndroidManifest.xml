@@ -16,7 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Lab4"
         tools:targetApi="31">
-
+        <activity
+            android:name=".ManagerViewOrder"
+            android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -36,11 +38,10 @@
             android:name=".MapsActivityMakkah"
             android:exported="false"
             android:label="activity_maps" />
-
-        <activity android:name=".MapsActivityJeddah"
+        <activity
+            android:name=".MapsActivityJeddah"
             android:exported="false"
-            android:label="activity_maps_jeddah"/>
-
+            android:label="activity_maps_jeddah" />
         <activity
             android:name=".Order"
             android:exported="false" />

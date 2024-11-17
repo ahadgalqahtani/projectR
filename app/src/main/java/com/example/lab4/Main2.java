@@ -72,7 +72,7 @@ public class Main2 extends AppCompatActivity {
                                     String role = snapshot.getValue(String.class);
                                     if ("Manager".equals(role)) {
                                         // Redirect to Manager activity
-                                        Intent manager = new Intent(Main2.this, Manger.class);
+                                        Intent manager = new Intent(Main2.this, Manager.class);
                                         startActivity(manager);
                                     } else {
                                         // Redirect to another activity if needed (e.g., DriverActivity)

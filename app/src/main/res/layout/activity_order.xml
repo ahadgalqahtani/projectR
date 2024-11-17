@@ -91,20 +91,6 @@
             android:layout_height="48dp"
             android:entries="@array/cities_array" />
 
-        <EditText
-            android:id="@+id/editTextOrderSummary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:gravity="top|start"
-            android:minLines="3"
-            android:maxLines="5"
-            android:scrollbars="vertical"
-            android:overScrollMode="ifContentScrolls"
-            android:textColor="#FF0000"
-            android:textSize="12sp" />
-
-
 
         <Button
             android:id="@+id/buttonSubmitOrder"
@@ -112,12 +98,13 @@
             android:gravity="center"
             android:layout_gravity="center"
             android:layout_height="wrap_content"
-            android:text="@string/Sub"
+            android:text="Submit Order"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:backgroundTint="#FF5722"
             android:layout_marginBottom="16dp"
-            />
+            android:onClick="submitOrder" />
+
 
 
 

@@ -46,12 +46,14 @@ public class Order extends AppCompatActivity {
         spinnerCity = findViewById(R.id.spinnerCity);
         buttonSubmitOrder = findViewById(R.id.buttonSubmitOrder);
 
+
         // Initialize Firebase Database reference
         databaseReference = FirebaseDatabase.getInstance().getReference("users"); // Adjust the path as necessary
         driverList = new ArrayList<>();
         driverAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, driverList);
         driverAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerAssignDriver.setAdapter(driverAdapter);
+
 
         databaseReference.orderByChild("role").equalTo("Driver").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -84,6 +86,7 @@ public class Order extends AppCompatActivity {
                 String orderAmount = editTextOrderAmount.getText().toString();
                 String orderWeight = editTextOrderWeight.getText().toString();
                 String assignedDriver = spinnerAssignDriver.getSelectedItem().toString();
+                String city = spinnerCity.getSelectedItem().toString();
 
                 // Perform validation (basic example)
                 if (orderId.isEmpty() || deliveryDate.isEmpty() || customerDetails.isEmpty() ||
@@ -91,15 +94,35 @@ public class Order extends AppCompatActivity {
                     Toast.makeText(Order.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-
                 // Process the order creation (you may want to send it to a database or another screen)
                 Toast.makeText(Order.this, "Order Created Successfully", Toast.LENGTH_SHORT).show();
 
+
+                // Navigate to the ViewOrderActivity and pass order details
+                Intent intent = new Intent(Order.this, ManagerViewOrder.class);
+                intent.putExtra("orderId", orderId);
+                intent.putExtra("deliveryDate", deliveryDate);
+                intent.putExtra("customerDetails", customerDetails);
+                intent.putExtra("orderAmount", orderAmount);
+                intent.putExtra("orderWeight", orderWeight);
+                intent.putExtra("assignedDriver", assignedDriver);
+                intent.putExtra("city",city);
+                startActivity(intent);
+
                 // Go back to the Supervisor dashboard
-
-
                 finish();
+            }
+        });
+
+        spinnerAssignDriver.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            }
+
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Not needed
             }
         });
 
@@ -134,4 +157,5 @@ public class Order extends AppCompatActivity {
         });
 
     }
+
 }
