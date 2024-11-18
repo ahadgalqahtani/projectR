@@ -31,16 +31,6 @@
         android:onClick="createOrder"/>
 
     <Button
-        android:id="@+id/buttonViewOrders"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:backgroundTint="#FF5722"
-        android:text="View Orders"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:layout_marginBottom="16dp" />
-
-    <Button
         android:id="@+id/buttonTrackOrder"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -49,22 +39,4 @@
         android:textSize="20sp"
         android:backgroundTint="#FF5722"
         android:layout_marginBottom="16dp" />
-
-    <TextView
-        android:id="@+id/textViewReports"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reports"
-        android:textSize="18sp"
-        android:textColor="#008577"
-        android:textStyle="bold"
-        android:fontFamily="sans-serif-medium"
-        android:layout_marginTop="16dp" />
-
-    <ListView
-        android:id="@+id/listViewReports"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp" />
 </LinearLayout>

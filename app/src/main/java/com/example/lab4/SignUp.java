@@ -8,7 +8,6 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.util.Log;

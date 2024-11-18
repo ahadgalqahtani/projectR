@@ -34,7 +34,6 @@ android {
     buildFeatures {
         viewBinding = true
     }
-
 }
 
 dependencies {
@@ -45,6 +44,11 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
     implementation(libs.play.services.maps)  // Using the existing version catalog reference for Google Maps
+
+    // Add CardView dependency using version catalog
+    implementation(libs.cardview)
+
+    // Add testing dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
