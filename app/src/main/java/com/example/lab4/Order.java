@@ -91,10 +91,11 @@ public class Order extends AppCompatActivity {
                 return;
             }
 
+            String status = "in progress";
             // Create an OrderData object
             OrderData orderData = new OrderData(orderId, deliveryDate, customerDetails,
                     orderAmount, orderWeight,
-                    assignedDriver, city, "Pending");
+                    assignedDriver, city, status);
 
             // Save the order to the database
             saveOrderToDatabase(orderId, orderData);

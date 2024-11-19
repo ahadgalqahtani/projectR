@@ -41,7 +41,7 @@ public class ViewOrder extends AppCompatActivity {
 
         // Initialize order list and adapter
         orderList = new ArrayList<>();
-        orderAdapter = new OrderAdapter(orderList); // Pass List instead of ArrayList
+        orderAdapter = new OrderAdapter(orderList, false);
         recyclerViewOrders.setAdapter(orderAdapter);
 
         // Firebase reference

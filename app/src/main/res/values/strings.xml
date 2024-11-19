@@ -26,4 +26,9 @@
         <item>Jeddah</item>
         <item>Makkah</item>
     </string-array>
+
+    <string-array name="status_options">
+        <item>In Progress</item>
+        <item>Completed</item>
+    </string-array>
 </resources>
