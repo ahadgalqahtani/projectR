@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#F9F9F9">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Profile Picture -->
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:scaleType="centerCrop"/>
+
+<!--            android:src="@drawable/ic_profile_placeholder"-->
+<!--            android:background="@drawable/circle_background" />-->
+
+        <!-- User Information Section -->
+        <TextView
+            android:id="@+id/profileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name: John Doe"
+            android:textSize="18sp"
+            android:paddingBottom="8dp"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/profileEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email: johndoe@example.com"
+            android:textSize="18sp"
+            android:paddingBottom="8dp"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/profileEmployeeID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Employee ID: EMP12345"
+            android:textSize="18sp"
+            android:paddingBottom="8dp"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/profilePhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Phone: +1234567890"
+            android:textSize="18sp"
+            android:paddingBottom="8dp"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/profileRole"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Role: Manager"
+            android:textSize="18sp"
+            android:paddingBottom="16dp" />
+
+        <!-- Edit Profile Button -->
+        <Button
+            android:id="@+id/editProfileButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit Profile"
+            android:backgroundTint="#FF5722"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="16dp"
+            android:onClick="editProfileMethod" />
+
+        <!-- Logout Button -->
+        <Button
+            android:id="@+id/logoutButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Log Out"
+            android:backgroundTint="#B00020"
+            android:textColor="#FFFFFF"
+            android:onClick="logoutMethod" />
+    </LinearLayout>
+</ScrollView>

@@ -31,6 +31,7 @@ public class Login extends AppCompatActivity {
 
         et_email = findViewById(R.id.email_Login);
         et_password = findViewById(R.id.password_Login);
+
     }
 
     public void registerPage(View view) {
