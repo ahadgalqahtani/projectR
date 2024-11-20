@@ -92,7 +92,7 @@ public class Order extends AppCompatActivity {
                 return;
             }
 
-            String status = "in progress";
+            String status = "In Progress";
             // Create an OrderData object
             OrderData orderData = new OrderData(orderId, deliveryDate, customerDetails,
                     orderAmount, orderWeight,

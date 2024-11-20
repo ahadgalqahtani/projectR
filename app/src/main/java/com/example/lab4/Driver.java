@@ -47,7 +47,7 @@ public class Driver extends AppCompatActivity {
         // Set up RecyclerView
         recyclerViewOrders = findViewById(R.id.recyclerViewOrders);
         recyclerViewOrders.setLayoutManager(new LinearLayoutManager(this));
-        orderAdapter = new OrderAdapter(orderList);
+        orderAdapter = new OrderAdapter(orderList, true);
         orderAdapter.setOnItemClickListener(this::onOrderSelected);
         recyclerViewOrders.setAdapter(orderAdapter);
 

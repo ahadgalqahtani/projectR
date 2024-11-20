@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.database.DataSnapshot;
@@ -16,19 +14,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.os.Bundle;
-import android.widget.Toast;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ViewOrder extends AppCompatActivity {
 
@@ -57,7 +42,7 @@ public class ViewOrder extends AppCompatActivity {
 
         // Initialize order list and adapter
         orderList = new ArrayList<>();
-        orderAdapter = new OrderAdapter(orderList); // Pass List instead of ArrayList
+        orderAdapter = new OrderAdapter(orderList, false); // Pass List instead of ArrayList
         recyclerViewOrders.setAdapter(orderAdapter);
 
         // Firebase reference
