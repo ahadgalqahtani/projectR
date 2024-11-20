@@ -17,7 +17,8 @@ public class Profile extends AppCompatActivity  {
     private DatabaseReference userDatabase;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
