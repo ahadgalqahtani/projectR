@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -168,5 +169,15 @@ public class Order extends AppCompatActivity {
                         Toast.makeText(Order.this, "Failed to save order", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    public void onClick (View view)
+    {
+        ImageView returnIcon = findViewById(R.id.returnIcon);
+        Intent intent = new Intent(Order.this, Manager.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+
+
     }
 }

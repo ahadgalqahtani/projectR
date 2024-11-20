@@ -8,6 +8,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.util.Log;
@@ -146,7 +147,7 @@ public class SignUp extends AppCompatActivity {
 
         public void onClick (View view)
         {
-            ImageButton returnIcon = findViewById(R.id.returnIcon);
+            ImageView returnIcon = findViewById(R.id.returnIcon);
             Intent intent = new Intent(SignUp.this, Login.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);

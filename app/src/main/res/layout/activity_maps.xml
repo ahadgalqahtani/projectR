@@ -17,24 +17,24 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- ScrollView containing the card and checklist -->
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintTop_toBottomOf="@id/map"
+        android:background="@drawable/page"
+        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="#F9F9F9"
-        android:padding="16dp">
+        app:layout_constraintTop_toBottomOf="@+id/map"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="0dp">
 
         <!-- Card for Store Selection Checklist -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            app:cardElevation="8dp"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="16dp"
-            app:cardBackgroundColor="@color/white">
+            app:cardElevation="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -45,55 +45,55 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Makkah Stores"
-                    android:textSize="20sp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp"
                     android:fontFamily="sans-serif-medium"
-                    android:layout_marginBottom="16dp"/>
+                    android:text="Makkah Stores"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
                 <!-- CheckBoxes for each store in Makkah -->
                 <CheckBox
                     android:id="@+id/store1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Danube"
-                    android:textSize="18sp"
-                    android:textColor="@color/black"
+                    android:buttonTint="#FF5722"
                     android:padding="8dp"
-                    android:buttonTint="#FF5722" />
+                    android:text="Danube"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
 
                 <CheckBox
                     android:id="@+id/store2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Panda"
-                    android:textSize="18sp"
-                    android:textColor="@color/black"
+                    android:buttonTint="#FF5722"
                     android:padding="8dp"
-                    android:buttonTint="#FF5722" />
+                    android:text="Panda"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
 
                 <CheckBox
                     android:id="@+id/store3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Othaim"
-                    android:textSize="18sp"
-                    android:textColor="@color/black"
+                    android:buttonTint="#FF5722"
                     android:padding="8dp"
-                    android:buttonTint="#FF5722" />
+                    android:text="Othaim"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
 
                 <!-- Done Button -->
                 <Button
                     android:id="@+id/doneButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Done"
                     android:layout_marginTop="16dp"
                     android:backgroundTint="#FF5722"
-                    android:textColor="@android:color/white"
-                    android:onClick="onDoneButtonClick"/>
+                    android:onClick="onDoneButtonClick"
+                    android:text="Done"
+                    android:textColor="@android:color/white" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-    </ScrollView>
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

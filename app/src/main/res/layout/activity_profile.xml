@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="#F9F9F9">
+    android:background="@drawable/page"
+    android:padding="16dp">
 
-    <LinearLayout
+    <!-- Card with Form -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="530dp"
+        android:layout_marginBottom="20dp"
+        app:cardElevation="6dp"
+        app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="#FFFFFF">
 
+        <LinearLayout
+            android:id="@+id/main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="24dp"
+            tools:context=".Login">
         <!-- Profile Picture -->
         <ImageView
             android:id="@+id/profileImage"
@@ -18,9 +31,8 @@
             android:layout_height="120dp"
             android:layout_gravity="center"
             android:layout_marginBottom="16dp"
-            android:scaleType="centerCrop"/>
-
-<!--            android:src="@drawable/ic_profile_placeholder"-->
+            android:scaleType="centerCrop"
+            android:src="@drawable/profile_icon"/>
 <!--            android:background="@drawable/circle_background" />-->
 
         <!-- User Information Section -->
@@ -28,8 +40,10 @@
             android:id="@+id/profileName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Name: John Doe"
-            android:textSize="18sp"
+            android:text="Name:"
+            android:textColor="#000000"
+            android:textSize="23sp"
+            android:textStyle="bold"
             android:paddingBottom="8dp"
             android:layout_marginBottom="4dp" />
 
@@ -37,8 +51,10 @@
             android:id="@+id/profileEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Email: johndoe@example.com"
-            android:textSize="18sp"
+            android:text="Email:"
+            android:textColor="#000000"
+            android:textSize="23sp"
+            android:textStyle="bold"
             android:paddingBottom="8dp"
             android:layout_marginBottom="4dp" />
 
@@ -46,8 +62,10 @@
             android:id="@+id/profileEmployeeID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Employee ID: EMP12345"
-            android:textSize="18sp"
+            android:text="Employee ID:"
+            android:textColor="#000000"
+            android:textSize="23sp"
+            android:textStyle="bold"
             android:paddingBottom="8dp"
             android:layout_marginBottom="4dp" />
 
@@ -55,8 +73,10 @@
             android:id="@+id/profilePhoneNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Phone: +1234567890"
-            android:textSize="18sp"
+            android:text="Phone: "
+            android:textColor="#000000"
+            android:textSize="23sp"
+            android:textStyle="bold"
             android:paddingBottom="8dp"
             android:layout_marginBottom="4dp" />
 
@@ -64,20 +84,12 @@
             android:id="@+id/profileRole"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Role: Manager"
-            android:textSize="18sp"
+            android:text="Role:"
+            android:textColor="#000000"
+            android:textSize="23sp"
+            android:textStyle="bold"
             android:paddingBottom="16dp" />
 
-        <!-- Edit Profile Button -->
-        <Button
-            android:id="@+id/editProfileButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Edit Profile"
-            android:backgroundTint="#FF5722"
-            android:textColor="#FFFFFF"
-            android:layout_marginBottom="16dp"
-            android:onClick="editProfileMethod" />
 
         <!-- Logout Button -->
         <Button
@@ -85,8 +97,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Log Out"
-            android:backgroundTint="#B00020"
+            android:backgroundTint="#FF5722"
             android:textColor="#FFFFFF"
             android:onClick="logoutMethod" />
-    </LinearLayout>
-</ScrollView>
+
+            <!-- Bottom Navigation View -->
+            <!--        app:itemIconTint="@color/nav_item_color_state"-->
+            <!--        app:itemTextColor="@color/nav_item_color_state"-->
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>
