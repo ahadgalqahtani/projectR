@@ -1,4 +1,5 @@
 package com.example.lab4;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,9 +76,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             // Color coding for order status
             String status = order.getStatus() != null ? order.getStatus() : "Unknown";
             switch (status) {
-                case "Pending":
+                case "In Progress":
                     textOrderStatus.setBackgroundColor(itemView.getResources().getColor(android.R.color.holo_orange_light));
-                    textOrderStatus.setText("Pending");
+                    textOrderStatus.setText("In Progress");
                     break;
                 case "Completed":
                     textOrderStatus.setBackgroundColor(itemView.getResources().getColor(android.R.color.holo_green_light));

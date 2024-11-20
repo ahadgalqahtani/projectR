@@ -2,12 +2,11 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/page">
 
-    <!-- Card with Form -->
+    <!-- Card with Toolbar and RecyclerView -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="600dp"
@@ -17,7 +16,6 @@
         app:cardBackgroundColor="#FFFFFF">
 
         <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -28,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#FF5722"
-                android:title="Orders"
+                android:title="Your active orders, please choose one:"
                 android:titleTextColor="@android:color/white"
                 android:elevation="4dp" />
 
@@ -36,10 +34,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewOrders"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:padding="8dp" />
-
-
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
