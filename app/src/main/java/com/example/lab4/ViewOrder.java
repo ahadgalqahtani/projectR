@@ -16,6 +16,20 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.os.Bundle;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ViewOrder extends AppCompatActivity {
 
     private RecyclerView recyclerViewOrders;
@@ -24,8 +38,7 @@ public class ViewOrder extends AppCompatActivity {
     private DatabaseReference orderReference;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_order);
 
@@ -44,7 +57,7 @@ public class ViewOrder extends AppCompatActivity {
 
         // Initialize order list and adapter
         orderList = new ArrayList<>();
-        orderAdapter = new OrderAdapter(orderList, false);
+        orderAdapter = new OrderAdapter(orderList); // Pass List instead of ArrayList
         recyclerViewOrders.setAdapter(orderAdapter);
 
         // Firebase reference
@@ -52,16 +65,6 @@ public class ViewOrder extends AppCompatActivity {
 
         // Fetch orders from Firebase
         fetchOrders();
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewOrders);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this)); // Or your desired layout manager
-        recyclerView.setAdapter(orderAdapter); // Set your RecyclerView Adapter
-
-// Add a divider between each item
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.divide_line)); // Optionally, you can customize the divider with a drawable
-        recyclerView.addItemDecoration(dividerItemDecoration);
-
     }
 
     private void fetchOrders() {

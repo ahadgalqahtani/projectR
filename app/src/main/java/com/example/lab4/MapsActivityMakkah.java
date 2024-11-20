@@ -1,10 +1,10 @@
 package com.example.lab4;
 
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Toast;
@@ -21,29 +21,29 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyCallback
-{
+public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     // Store markers to control adding and removing
-    private Map<String, Marker> storeMarkers = new HashMap<>();
-
-    // Define store locations
-    private final LatLng danubeLocation = new LatLng(21.360238750877443, 39.90462612691831); // Example coordinates for Danube
-    private final LatLng pandaLocation = new LatLng(21.394691736745433, 39.884010940265156);  // Example coordinates for Panda
-    private final LatLng othaimLocation = new LatLng(21.37364180453048, 39.83384401983631); // Example coordinates for Othaim
+    private final Map<String, Marker> storeMarkers = new HashMap<>();
+    private final Map<String, LatLng> storeLocations = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps); // Make sure this matches your XML filename
+        setContentView(R.layout.activity_maps); // Ensure this matches your XML layout
 
         // Initialize the map fragment
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -60,15 +60,26 @@ public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyC
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
 
+        // Fetch store locations from Firebase
+        fetchLocationsFromFirebase();
+
         // Set up CheckBox listeners
         setupCheckBoxListeners();
+
+        // Check and request location permissions at startup
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        }
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Set map settings
+        // Enable location features if permissions are granted
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
@@ -76,25 +87,23 @@ public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyC
 
         // Center the map on Makkah
         LatLng makkah = new LatLng(21.3891, 39.8579);
-
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(makkah, 12));
     }
 
-    // Handle the results of permission requests
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission was granted, initialize the map again
-                if (mMap != null) {
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        mMap.setMyLocationEnabled(true);
-                    }
+                // Permission granted, enable location features
+                if (mMap != null && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    mMap.setMyLocationEnabled(true);
                 }
             } else {
-                Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
+                // Permission denied, show a warning
+                Toast.makeText(this, "Location permissions are required to use this feature.", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -105,13 +114,20 @@ public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyC
         CheckBox store2 = findViewById(R.id.store2);
         CheckBox store3 = findViewById(R.id.store3);
 
-        store1.setOnCheckedChangeListener((buttonView, isChecked) -> handleMarker(isChecked, "Danube", danubeLocation));
-        store2.setOnCheckedChangeListener((buttonView, isChecked) -> handleMarker(isChecked, "Panda", pandaLocation));
-        store3.setOnCheckedChangeListener((buttonView, isChecked) -> handleMarker(isChecked, "Othaim", othaimLocation));
+        store1.setOnCheckedChangeListener((buttonView, isChecked) -> handleMarker(isChecked, "danube"));
+        store2.setOnCheckedChangeListener((buttonView, isChecked) -> handleMarker(isChecked, "panda"));
+        store3.setOnCheckedChangeListener((buttonView, isChecked) -> handleMarker(isChecked, "othaim"));
     }
 
-    // Method to add or remove marker based on CheckBox state
-    private void handleMarker(boolean shouldShow, String storeName, LatLng location) {
+    // Add or remove marker based on CheckBox state
+    private void handleMarker(boolean shouldShow, String storeName) {
+        LatLng location = storeLocations.get(storeName);
+
+        if (location == null) {
+            Toast.makeText(this, storeName + " location not loaded yet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (shouldShow) {
             // Add marker if checked
             Marker marker = mMap.addMarker(new MarkerOptions().position(location).title(storeName));
@@ -130,9 +146,9 @@ public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyC
     public void onDoneButtonClick(View view) {
         StringBuilder selectedStores = new StringBuilder();
 
-        if (((CheckBox) findViewById(R.id.store1)).isChecked()) selectedStores.append("Danube\n");
-        if (((CheckBox) findViewById(R.id.store2)).isChecked()) selectedStores.append("Panda\n");
-        if (((CheckBox) findViewById(R.id.store3)).isChecked()) selectedStores.append("Othaim\n");
+        if (((CheckBox) findViewById(R.id.store1)).isChecked()) selectedStores.append("danube\n");
+        if (((CheckBox) findViewById(R.id.store2)).isChecked()) selectedStores.append("panda\n");
+        if (((CheckBox) findViewById(R.id.store3)).isChecked()) selectedStores.append("othaim\n");
 
         if (selectedStores.length() == 0) {
             Toast.makeText(this, "No stores selected", Toast.LENGTH_SHORT).show();
@@ -141,9 +157,51 @@ public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyC
             Intent intent = new Intent();
             intent.putExtra("selectedStores", selectedStores.toString().trim());
             setResult(RESULT_OK, intent);  // Return result to Order activity
-            finish(); // End this activity and return
+            finish();
         }
     }
 
-}
+    private void fetchLocationsFromFirebase() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                .getReference("locations/Makkah");
 
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Clear previous store locations
+                storeLocations.clear();
+
+                for (DataSnapshot storeSnapshot : snapshot.getChildren()) {
+                    String storeName = storeSnapshot.getKey();
+                    Double latitude = storeSnapshot.child("latitude").getValue(Double.class);
+                    Double longitude = storeSnapshot.child("longitude").getValue(Double.class);
+
+                    if (storeName != null && latitude != null && longitude != null) {
+                        storeName = storeName.toLowerCase(); // Normalize key
+                        storeLocations.put(storeName, new LatLng(latitude, longitude));
+                    }
+                }
+
+                // If map is ready, add markers for pre-selected stores
+                if (mMap != null) {
+                    CheckBox store1 = findViewById(R.id.store1);
+                    CheckBox store2 = findViewById(R.id.store2);
+                    CheckBox store3 = findViewById(R.id.store3);
+
+                    if (store1.isChecked()) handleMarker(true, "danube");
+                    if (store2.isChecked()) handleMarker(true, "panda");
+                    if (store3.isChecked()) handleMarker(true, "othaim");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("FirebaseData", "Failed to load locations: " + error.getMessage());
+                Toast.makeText(MapsActivityMakkah.this,
+                        "Failed to load store locations: " + error.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+}
