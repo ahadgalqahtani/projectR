@@ -88,7 +88,6 @@ public class Manager extends AppCompatActivity {
     }
 
     public void logoutMethod() {
-        mAuth.signOut();
         startActivity(new Intent(this, Login.class));
         finish();
     }

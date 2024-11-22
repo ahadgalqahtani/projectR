@@ -1,48 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/page">
 
-    <!-- Correct Toolbar using androidx.appcompat.widget.Toolbar -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <!-- Card with Toolbar and RecyclerView -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FF5722"
-        android:title="Current Order"
-        android:titleTextColor="@android:color/white"
-        android:layout_alignParentTop="true"
-        app:titleTextColor="@android:color/white"/>
+        android:layout_height="350dp"
+        android:layout_margin="20dp"
+        app:cardElevation="6dp"
+        app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="#FFFFFF">
 
-    <!-- Order details -->
-    <TextView
-        android:id="@+id/tv_order_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
-        android:layout_marginTop="16dp"
-        android:text="Order Details"
-        android:textSize="16sp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="437dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-    <!-- Order status -->
-    <TextView
-        android:id="@+id/tv_order_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_order_details"
-        android:layout_marginTop="16dp"
-        android:text="Order Status: In Progress"
-        android:textSize="16sp"/>
+            <!-- Toolbar -->
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FF5722"
+                android:elevation="4dp"
+                android:title="Your active orders, please choose one:"
+                android:titleTextColor="@android:color/white" />
 
-    <!-- Toggle status button -->
-    <ToggleButton
-        android:id="@+id/toggle_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_order_status"
-        android:layout_marginTop="16dp"
-        android:textOn="Completed"
-        android:textOff="In Progress" />
+            <!-- Order details -->
+            <TextView
+                android:id="@+id/tv_order_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingBottom="8dp"
+                android:text="Order Details"
+                android:textSize="23sp"
+                android:textStyle="bold" />
 
+            <!-- Toggle status button -->
+            <ToggleButton
+                android:id="@+id/toggle_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#FF5722"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="#FFFFFF"
+                android:textOff="In Progress"
+                android:textOn="Completed"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </RelativeLayout>
+
+
