@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.Toast;
+import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -14,13 +15,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import androidx.appcompat.app.AlertDialog;
 
 public class CurrentOrder extends AppCompatActivity {
-
     private TextView orderDetailsTextView;
     private ToggleButton toggleStatus;
     private DatabaseReference orderReference;
-    private String currentOrderId;  // This will hold the order ID from DriverActivity
+    private String currentOrderId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,11 @@ public class CurrentOrder extends AppCompatActivity {
 
         // Get the orderId passed from DriverActivity
         currentOrderId = getIntent().getStringExtra("orderId");
+        if (currentOrderId == null) {
+            Toast.makeText(this, "No order ID provided", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         // Initialize views
         orderDetailsTextView = findViewById(R.id.tv_order_details);
@@ -36,25 +42,42 @@ public class CurrentOrder extends AppCompatActivity {
 
         // Set up the toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);  // This sets the Toolbar as the action bar
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Current Order");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Firebase reference to the order with the dynamic orderId
-        orderReference = FirebaseDatabase.getInstance().getReference("orders").child(currentOrderId);
+        // Fix: Update Firebase reference to match Driver activity
+        orderReference = FirebaseDatabase.getInstance().getReference("order").child(currentOrderId);
 
         // Load order details
         loadOrderDetails();
 
         // Handle toggle button changes
         toggleStatus.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            String newStatus = isChecked ? "Completed" : "In Progress";
-            updateOrderStatus(newStatus);
+            if (isChecked) {
+                // Show confirmation dialog before marking as completed
+                new AlertDialog.Builder(this)
+                        .setTitle("Confirm Completion")
+                        .setMessage("Are you sure you want to mark this order as completed?")
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            updateOrderStatus("Completed");
+                        })
+                        .setNegativeButton("No", (dialog, which) -> {
+                            toggleStatus.setChecked(false);
+                        })
+                        .show();
+            } else {
+                updateOrderStatus("In Progress");
+            }
         });
     }
 
-    /**
-     * Fetches the current order details from Firebase and updates the UI.
-     */
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
     private void loadOrderDetails() {
         orderReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -74,9 +97,13 @@ public class CurrentOrder extends AppCompatActivity {
 
                         // Set the toggle button state based on the order status
                         toggleStatus.setChecked("Completed".equals(order.getStatus()));
+
+                        // Disable toggle if order is already completed
+                        toggleStatus.setEnabled(!"Completed".equals(order.getStatus()));
                     }
                 } else {
                     Toast.makeText(CurrentOrder.this, "Order not found", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             }
 
@@ -87,22 +114,29 @@ public class CurrentOrder extends AppCompatActivity {
         });
     }
 
-    /**
-     * Updates the order status in Firebase.
-     *
-     * @param status The new status to be set ("In Progress" or "Completed").
-     */
     private void updateOrderStatus(String status) {
         orderReference.child("status").setValue(status)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(this, "Order status updated to " + status, Toast.LENGTH_SHORT).show();
-                        // Once the status is updated, return to the DriverActivity
-                        Intent intent = new Intent(CurrentOrder.this, Driver.class);
-                        startActivity(intent);
-                        finish(); // Close the current activity (CurrentOrder)
+                        if ("Completed".equals(status)) {
+                            Toast.makeText(this, "Order Completed", Toast.LENGTH_SHORT).show();
+
+                            // Clear the static currentOrderId in Driver class
+                            Driver.currentOrderId = null;
+
+                            // Add a small delay before returning
+                            new Handler().postDelayed(() -> {
+                                Intent intent = new Intent(CurrentOrder.this, Driver.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                finish();
+                            }, 1000);
+                        } else {
+                            Toast.makeText(this, "Order status updated to " + status, Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Toast.makeText(this, "Failed to update order status", Toast.LENGTH_SHORT).show();
+                        toggleStatus.setChecked(!toggleStatus.isChecked()); // Revert toggle state
                     }
                 });
     }
