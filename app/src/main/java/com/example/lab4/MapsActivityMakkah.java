@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -202,6 +203,16 @@ public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyC
                         Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void onClick (View view)
+    {
+        ImageView returnIcon = findViewById(R.id.returnIcon);
+        Intent intent = new Intent(this,Order.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+
+
     }
 
 }

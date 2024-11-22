@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -136,5 +137,15 @@ public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyC
             setResult(RESULT_OK, intent);  // Return result to Order activity
             finish(); // End this activity and return
         }
+    }
+
+    public void onClick (View view)
+    {
+        ImageView returnIcon = findViewById(R.id.returnIcon);
+        Intent intent = new Intent(this,Order.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+
+
     }
 }
