@@ -40,7 +40,7 @@ public class CurrentOrder extends AppCompatActivity {
         orderDetailsTextView = findViewById(R.id.tv_order_details);
         toggleStatus = findViewById(R.id.toggle_status);
 
-        // Set up the toolbar
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Current Order");
