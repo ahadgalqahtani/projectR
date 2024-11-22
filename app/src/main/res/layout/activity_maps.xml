@@ -39,18 +39,39 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_marginBottom="24dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
+                <!-- ImageButton -->
+                <ImageView
+                    android:id="@+id/returnIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="Back"
+                    android:onClick="onClick"
+                    android:src="@drawable/back_icon" />
+
+                <!-- TextView -->
                 <TextView
+                    android:id="@+id/banner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="16dp"
                     android:fontFamily="sans-serif-medium"
                     android:text="Makkah Stores"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textColor="#000000"
+                    android:textSize="23sp"
+                    android:textStyle="bold" /> <!-- Space between ImageButton and TextView -->
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                android:padding="25dp"> <!-- Add a top margin for spacing -->
 
                 <!-- CheckBoxes for each store in Makkah -->
                 <CheckBox
