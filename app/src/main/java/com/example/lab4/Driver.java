@@ -3,6 +3,8 @@ package com.example.lab4;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,15 +33,22 @@ public class Driver extends AppCompatActivity {
     private DatabaseReference userReference, orderReference;
     private String driverId;
     private String currentOrderId;
+    private TextView welcomeMessage;
+    private ImageButton logoutButton;
+    private FirebaseAuth mAuth;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver);
+
+
 
         // Initialize Firebase references
         userReference = FirebaseDatabase.getInstance().getReference("users");
         orderReference = FirebaseDatabase.getInstance().getReference("order");
+        welcomeMessage = findViewById(R.id.welcomeMessage); // Match this ID with your XML layout
 
         // Initialize order list
         orderList = new ArrayList<>();
@@ -51,8 +60,21 @@ public class Driver extends AppCompatActivity {
         orderAdapter.setOnItemClickListener(this::onOrderSelected);
         recyclerViewOrders.setAdapter(orderAdapter);
 
+        mAuth = FirebaseAuth.getInstance();
+        logoutButton = findViewById(R.id.logoutButton);
+        logoutButton.setOnClickListener(v -> logoutMethod());
+
         // Fetch driver's ID and orders
         fetchDriver();
+
+
+        // Set item click listener
+        orderAdapter.setOnItemClickListener(order -> {
+            // Pass the selected orderId to the CurrentOrder activity
+            Intent intent = new Intent(Driver.this, CurrentOrder.class);
+            intent.putExtra("orderId", order.getOrderId()); // Pass the orderId
+            startActivity(intent);
+        });
     }
 
     private void fetchDriver() {
@@ -68,9 +90,13 @@ public class Driver extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     String role = snapshot.child("role").getValue(String.class);
-                    if ("Driver".equals(role)) {
+                    String driverName = snapshot.child("name").getValue(String.class);
+
+                    if ("Driver".equals(role) && driverName != null) {
                         driverId = uid; // Use the current user's UID as the driver ID
-                        fetchAssignedOrders(); // Fetch orders based on driver UID
+                        welcomeMessage.setText("Welcome, " + driverName); // Display the driver's name
+                        Log.d("Driver", "Driver Name fetched: " + driverName); // Debugging
+                        fetchAssignedOrders(); // Fetch orders assigned to the driver
                     } else {
                         Toast.makeText(Driver.this, "You are not authorized to access this page.", Toast.LENGTH_SHORT).show();
                         finish();
@@ -181,5 +207,11 @@ public class Driver extends AppCompatActivity {
                 Toast.makeText(Driver.this, "Failed to check order status: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void logoutMethod() {
+        mAuth.signOut();
+        startActivity(new Intent(this, Login.class));
+        finish();
     }
 }
