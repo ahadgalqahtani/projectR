@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -15,12 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ViewOrder extends AppCompatActivity {
+public class ViewOrder extends AppCompatActivity
+{
 
     private RecyclerView recyclerViewOrders;
     private OrderAdapter orderAdapter;
     private List<OrderData> orderList;  // Use List instead of ArrayList
     private DatabaseReference orderReference;
+    private BaseActivityHelper baseActivityHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +55,11 @@ public class ViewOrder extends AppCompatActivity {
 
         // Fetch orders from Firebase
         fetchOrders();
+
+        // Setup bottom navigation
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        baseActivityHelper = new BaseActivityHelper(this, bottomNavigationView);
+        baseActivityHelper.setupBottomNavigationView();
     }
 
     private void fetchOrders() {
