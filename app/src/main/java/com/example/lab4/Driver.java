@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +37,7 @@ public class Driver extends AppCompatActivity {
     private TextView welcomeMessage;
     private ImageButton logoutButton;
     private FirebaseAuth mAuth;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -75,6 +77,9 @@ public class Driver extends AppCompatActivity {
             intent.putExtra("orderId", order.getOrderId()); // Pass the orderId
             startActivity(intent);
         });
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        setupBottomNavigation();
     }
 
     private void fetchDriver() {
@@ -179,6 +184,31 @@ public class Driver extends AppCompatActivity {
         Intent intent = new Intent(this, CurrentOrder.class);
         intent.putExtra("orderId", currentOrderId);
         startActivity(intent);
+    }
+
+    private void setupBottomNavigation() {
+        bottomNavigationView.setSelectedItemId(R.id.nav_home); // Default to Home (Driver page)
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_home) {
+                // Navigate to Driver Activity (current activity)
+                startActivity(new Intent(Driver.this, Driver.class));
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                // Navigate to Profile page
+                startActivity(new Intent(Driver.this, Profile.class));
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_orders) {
+                // Show toast message for not allowed to access orders
+                Toast.makeText(Driver.this, "Not allowed to access orders", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
+            return false;
+        });
     }
 
     @Override

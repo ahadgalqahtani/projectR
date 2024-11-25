@@ -1,5 +1,6 @@
 package com.example.lab4;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -16,16 +17,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class ViewOrder extends AppCompatActivity
-{
+public class ViewOrder extends AppCompatActivity {
 
     private RecyclerView recyclerViewOrders;
     private OrderAdapter orderAdapter;
-    private List<OrderData> orderList;  // Use List instead of ArrayList
+    private List<OrderData> orderList;
     private DatabaseReference orderReference;
-    private BaseActivityHelper baseActivityHelper;
-
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +45,7 @@ public class ViewOrder extends AppCompatActivity
 
         // Initialize order list and adapter
         orderList = new ArrayList<>();
-        orderAdapter = new OrderAdapter(orderList, false); // Pass List instead of ArrayList
+        orderAdapter = new OrderAdapter(orderList, false);
         recyclerViewOrders.setAdapter(orderAdapter);
 
         // Firebase reference
@@ -57,9 +55,28 @@ public class ViewOrder extends AppCompatActivity
         fetchOrders();
 
         // Setup bottom navigation
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        baseActivityHelper = new BaseActivityHelper(this, bottomNavigationView);
-        baseActivityHelper.setupBottomNavigationView();
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        setupBottomNavigation();
+    }
+
+    private void setupBottomNavigation() {
+        bottomNavigationView.setSelectedItemId(R.id.nav_orders); // Set orders as selected
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_home) {
+                startActivity(new Intent(ViewOrder.this, Manager.class));
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                startActivity(new Intent(ViewOrder.this, Profile.class));
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_orders) {
+                return true;
+            }
+            return false;
+        });
     }
 
     private void fetchOrders() {
@@ -82,4 +99,5 @@ public class ViewOrder extends AppCompatActivity
             }
         });
     }
+
 }
