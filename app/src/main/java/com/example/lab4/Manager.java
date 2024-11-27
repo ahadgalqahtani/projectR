@@ -23,6 +23,7 @@ public class Manager extends AppCompatActivity {
     private BaseActivityHelper baseActivityHelper;
     private DatabaseReference ordersDatabase;
     private ImageButton logoutButton;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +48,9 @@ public class Manager extends AppCompatActivity {
         ordersDatabase = FirebaseDatabase.getInstance().getReference("orders");
 
         // Setup bottom navigation
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        baseActivityHelper = new BaseActivityHelper(this, bottomNavigationView);
-        baseActivityHelper.setupBottomNavigationView();
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        setupBottomNavigation();
+
     }
 
     private void loadUserProfile() {
@@ -90,5 +91,36 @@ public class Manager extends AppCompatActivity {
     public void logoutMethod() {
         startActivity(new Intent(this, Login.class));
         finish();
+    }
+    private void setupBottomNavigation() {
+        bottomNavigationView.setSelectedItemId(R.id.nav_home); // Set home as default
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_profile) {
+                // Navigate to Profile activity
+                Intent profileIntent = new Intent(Manager.this, Profile.class);
+                startActivity(profileIntent);
+                return true;
+            } else if (itemId == R.id.nav_orders) {
+                // Navigate to ViewOrder activity
+                Intent ordersIntent = new Intent(Manager.this, ViewOrder.class);
+                startActivity(ordersIntent);
+                return true;
+            } else if (itemId == R.id.nav_home) {
+                // Home action, stay in current activity
+                return true;
+            }
+            return false;
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (bottomNavigationView.getSelectedItemId() == R.id.nav_home) {
+            super.onBackPressed();
+        } else {
+            bottomNavigationView.setSelectedItemId(R.id.nav_home); // Navigate to home when back is pressed
+        }
     }
 }
