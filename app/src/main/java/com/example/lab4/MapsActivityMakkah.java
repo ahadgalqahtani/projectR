@@ -31,7 +31,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -211,8 +210,5 @@ public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyC
         Intent intent = new Intent(this,Order.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
-
-
     }
-
 }

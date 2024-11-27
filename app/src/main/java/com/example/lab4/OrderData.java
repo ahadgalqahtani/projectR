@@ -9,6 +9,7 @@ public class OrderData {
     private String assignedDriver;
     private String city;
     private String status;
+    private Object stores;  // Added stores field
 
     // Empty constructor for Firebase
     public OrderData() {}
@@ -25,7 +26,10 @@ public class OrderData {
         this.assignedDriver = assignedDriver;
         this.city = city;
         this.status = status;
+        this.stores = null;  // Initialize stores as null
     }
+
+
 
     // Getters and Setters
     public String getOrderId() {

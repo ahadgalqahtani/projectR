@@ -86,10 +86,8 @@ public class Order extends AppCompatActivity {
                     ? spinnerCity.getSelectedItem().toString() : "";
 
             // Validate inputs
-            if (orderId.isEmpty() || deliveryDate.isEmpty() || customerDetails.isEmpty() ||
-                    orderAmount.isEmpty() || orderWeight.isEmpty() || assignedDriver.isEmpty() || city.isEmpty()) {
-                Toast.makeText(Order.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                return;
+            if (!validateInputs(orderId, deliveryDate, orderAmount, orderWeight, assignedDriver, city)) {
+                return; // Stop further processing if validation fails
             }
 
             String status = "In Progress";
@@ -130,19 +128,26 @@ public class Order extends AppCompatActivity {
                 } else {
                     return;
                 }
+
+                // Pass the orderId to the respective city activity
+                String orderId = editTextOrderId.getText().toString();
+                intent.putExtra("orderId", orderId);
+
+                // Start the city-specific activity
                 startActivity(intent);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+
     }
 
     private void saveOrderToDatabase(String orderId, OrderData orderData) {
         // Get reference to the "order" node in Firebase
         DatabaseReference orderReference = FirebaseDatabase.getInstance().getReference("order");
 
-        // Save the order data to Firebase under the orderId
+        // Save the order data to Firebase under the orderId, including stores as null
         orderReference.child(orderId).setValue(orderData)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -150,7 +155,7 @@ public class Order extends AppCompatActivity {
                         Toast.makeText(Order.this, "Order saved successfully!", Toast.LENGTH_SHORT).show();
 
                         // Create an intent to open ViewOrder activity
-                        Intent intent = new Intent(Order.this, ViewOrder.class); // Updated class name
+                        Intent intent = new Intent(Order.this, ViewOrder.class);
                         intent.putExtra("orderId", orderData.getOrderId());
                         intent.putExtra("deliveryDate", orderData.getDeliveryDate());
                         intent.putExtra("customerDetails", orderData.getCustomerDetails());
@@ -171,13 +176,39 @@ public class Order extends AppCompatActivity {
                 });
     }
 
-    public void onClick (View view)
-    {
+    private boolean validateInputs(String orderId, String deliveryDate, String orderAmount,
+                                   String orderWeight, String assignedDriver, String city) {
+        if (!orderId.matches("\\d{6}")) {
+            Toast.makeText(this, "Order ID must be 6 digits", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!deliveryDate.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            Toast.makeText(this, "Delivery Date must follow YYYY-MM-DD format", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!orderAmount.matches("\\d+")) {
+            Toast.makeText(this, "Order Amount must be numeric", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!orderWeight.matches("\\d+")) {
+            Toast.makeText(this, "Order Weight must be numeric", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (assignedDriver.isEmpty()) {
+            Toast.makeText(this, "Please assign a driver", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (city.isEmpty()) {
+            Toast.makeText(this, "Please select a city", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    public void onClick(View view) {
         ImageView returnIcon = findViewById(R.id.returnIcon);
         Intent intent = new Intent(Order.this, Manager.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
-
-
     }
 }
