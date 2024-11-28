@@ -28,13 +28,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private DatabaseReference orderReference;
 
     // Store markers to control adding and removing
     private final Map<String, Marker> storeMarkers = new HashMap<>();
@@ -44,6 +47,17 @@ public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps); // Ensure this matches your XML layout
+
+        // Get the orderId passed from Order
+        String currentOrderId = getIntent().getStringExtra("orderId");
+        Log.d("OrderID", "Received Order ID: " + currentOrderId);
+        if (currentOrderId == null) {
+            Toast.makeText(this, "No order ID provided", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        // Update Firebase reference to match Driver activity
+        orderReference = FirebaseDatabase.getInstance().getReference("order").child(currentOrderId);
 
         // Initialize the map fragment
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -142,8 +156,43 @@ public class MapsActivityMakkah extends AppCompatActivity implements OnMapReadyC
         }
     }
 
+    private void updateOrderStores() {
+        // Ensure orderReference is not null
+        if (orderReference == null) {
+            Log.e("MapsActivityMakkah", "Order reference is null");
+            Toast.makeText(this, "Error: Cannot update stores", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Prepare a list to store selected stores with consistent capitalization
+        List<String> selectedStores = new ArrayList<>();
+        // Check the status of each CheckBox and add the corresponding store name to the list
+        if (((CheckBox) findViewById(R.id.store1)).isChecked()) {
+            selectedStores.add("Danube");
+        }
+        if (((CheckBox) findViewById(R.id.store2)).isChecked()) {
+            selectedStores.add("Panda");
+        }
+        if (((CheckBox) findViewById(R.id.store3)).isChecked()) {
+            selectedStores.add("Othaim");
+        }
+        // Prepare a map for the updates using updateChildren
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("stores", selectedStores);
+        // Update the "stores" child node in Firebase using updateChildren
+        orderReference.updateChildren(updateMap)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("MapsActivityJeddah", "Stores updated successfully: " + selectedStores);
+                    Toast.makeText(MapsActivityMakkah.this, "Stores updated successfully", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("MapsActivityJeddah", "Failed to update stores", e);
+                    Toast.makeText(MapsActivityMakkah.this, "Failed to update stores: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
     // Method triggered when the "Done" button is clicked
     public void onDoneButtonClick(View view) {
+        updateOrderStores(); // Save the selected stores to Firebase
         StringBuilder selectedStores = new StringBuilder();
 
         if (((CheckBox) findViewById(R.id.store1)).isChecked()) selectedStores.append("danube\n");
