@@ -18,6 +18,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Order extends AppCompatActivity {
 
@@ -91,10 +93,11 @@ public class Order extends AppCompatActivity {
             }
 
             String status = "In Progress";
+            List<String> stores= Arrays.asList("1", "2", "3");;
             // Create an OrderData object
             OrderData orderData = new OrderData(orderId, deliveryDate, customerDetails,
                     orderAmount, orderWeight,
-                    assignedDriver, city, status);
+                    assignedDriver, city, status, stores);
 
             // Save the order to the database
             saveOrderToDatabase(orderId, orderData);

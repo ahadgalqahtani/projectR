@@ -27,13 +27,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private String currentOrderId;
+    private DatabaseReference orderReference;
 
     // Store markers to control adding and removing
     private final Map<String, Marker> storeMarkers = new HashMap<>();
@@ -43,6 +47,16 @@ public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_jeddah); // Ensure this matches your XML layout
+
+        // Get the orderId passed from DriverActivity
+        currentOrderId = getIntent().getStringExtra("orderId");
+        if (currentOrderId == null) {
+            Toast.makeText(this, "No order ID provided", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        // Update Firebase reference to match Driver activity
+        orderReference = FirebaseDatabase.getInstance().getReference("order").child(currentOrderId);
 
         // Initialize the map fragment
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -131,24 +145,52 @@ public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    public void onDoneButtonClick(View view) {
-        StringBuilder selectedStores = new StringBuilder("Selected Stores:\n");
+    private void updateOrderStores() {
+        // Prepare a list to store selected stores
+        List<String> selectedStores = new ArrayList<>();
 
-        if (((CheckBox) findViewById(R.id.store1)).isChecked()) selectedStores.append("Danube\n");
-        if (((CheckBox) findViewById(R.id.store2)).isChecked()) selectedStores.append("Panda\n");
-        if (((CheckBox) findViewById(R.id.store3)).isChecked()) selectedStores.append("Othaim\n");
-
-        if (selectedStores.toString().equals("Selected Stores:\n")) {
-            Toast.makeText(this, "No stores selected", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, selectedStores.toString(), Toast.LENGTH_LONG).show();
-            Intent intent = new Intent();
-            intent.putExtra("selectedStores", selectedStores.toString().trim());
-            setResult(RESULT_OK, intent);  // Return result to Order activity
-            finish();
+        // Check the status of each CheckBox and add the corresponding store name to the list
+        if (((CheckBox) findViewById(R.id.store1)).isChecked()) {
+            selectedStores.add("Danube");
         }
+        if (((CheckBox) findViewById(R.id.store2)).isChecked()) {
+            selectedStores.add("Panda");
+        }
+        if (((CheckBox) findViewById(R.id.store3)).isChecked()) {
+            selectedStores.add("Othaim");
+        }
+
+        // Prepare a map for the updates using updateChildren
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("stores", selectedStores);
+
+        // Update the "stores" child node in Firebase using updateChildren
+        orderReference.updateChildren(updateMap)
+                .addOnSuccessListener(aVoid ->
+                        Toast.makeText(MapsActivityJeddah.this, "Stores updated successfully", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e ->
+                        Toast.makeText(MapsActivityJeddah.this, "Failed to update stores: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
+
+    public void onDoneButtonClick(View view) {
+            updateOrderStores(); // Save the selected stores to Firebase
+            StringBuilder selectedStores = new StringBuilder("Selected Stores:\n");
+
+            if (((CheckBox) findViewById(R.id.store1)).isChecked()) selectedStores.append("Danube\n");
+            if (((CheckBox) findViewById(R.id.store2)).isChecked()) selectedStores.append("Panda\n");
+            if (((CheckBox) findViewById(R.id.store3)).isChecked()) selectedStores.append("Othaim\n");
+
+            if (selectedStores.toString().equals("Selected Stores:\n")) {
+                Toast.makeText(this, "No stores selected", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, selectedStores.toString(), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent();
+                intent.putExtra("selectedStores", selectedStores.toString().trim());
+                setResult(RESULT_OK, intent);  // Return result to Order activity
+                finish();
+            }
+        }
     private void fetchLocationsFromFirebase() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance()
                 .getReference("locations/Jeddah");

@@ -1,5 +1,7 @@
 package com.example.lab4;
 
+import java.util.List;
+
 public class OrderData {
     private String orderId;
     private String deliveryDate;
@@ -9,7 +11,7 @@ public class OrderData {
     private String assignedDriver;
     private String city;
     private String status;
-    private Object stores;  // Added stores field
+    private List<String> stores;  // Updated to List<String>
 
     // Empty constructor for Firebase
     public OrderData() {}
@@ -17,7 +19,7 @@ public class OrderData {
     // Parameterized constructor
     public OrderData(String orderId, String deliveryDate, String customerDetails,
                      String orderAmount, String orderWeight,
-                     String assignedDriver, String city,String status) {
+                     String assignedDriver, String city,String status, List<String> stores) {
         this.orderId = orderId;
         this.deliveryDate = deliveryDate;
         this.customerDetails = customerDetails;
@@ -26,7 +28,7 @@ public class OrderData {
         this.assignedDriver = assignedDriver;
         this.city = city;
         this.status = status;
-        this.stores = null;  // Initialize stores as null
+        this.stores = stores;
     }
 
 
@@ -93,5 +95,14 @@ public class OrderData {
 
     public void setStatus(String status) {
         this.status = status; // NEW SETTER
+    }
+
+    // Add getter and setter for stores
+    public List<String> getStores() {
+        return stores;
+    }
+
+    public void setStores(List<String> stores) {
+        this.stores = stores;
     }
 }
