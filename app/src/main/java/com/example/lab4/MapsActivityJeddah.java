@@ -36,7 +36,6 @@ public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyC
 
     private GoogleMap mMap;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private String currentOrderId;
     private DatabaseReference orderReference;
 
     // Store markers to control adding and removing
@@ -48,8 +47,9 @@ public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_jeddah); // Ensure this matches your XML layout
 
-        // Get the orderId passed from DriverActivity
-        currentOrderId = getIntent().getStringExtra("orderId");
+        // Get the orderId passed from Order
+        String currentOrderId = getIntent().getStringExtra("orderId");
+        Log.d("OrderID", "Received Order ID: " + currentOrderId);
         if (currentOrderId == null) {
             Toast.makeText(this, "No order ID provided", Toast.LENGTH_SHORT).show();
             finish();
@@ -146,9 +146,14 @@ public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyC
     }
 
     private void updateOrderStores() {
-        // Prepare a list to store selected stores
+        // Ensure orderReference is not null
+        if (orderReference == null) {
+            Log.e("MapsActivityJeddah", "Order reference is null");
+            Toast.makeText(this, "Error: Cannot update stores", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Prepare a list to store selected stores with consistent capitalization
         List<String> selectedStores = new ArrayList<>();
-
         // Check the status of each CheckBox and add the corresponding store name to the list
         if (((CheckBox) findViewById(R.id.store1)).isChecked()) {
             selectedStores.add("Danube");
@@ -159,17 +164,19 @@ public class MapsActivityJeddah extends AppCompatActivity implements OnMapReadyC
         if (((CheckBox) findViewById(R.id.store3)).isChecked()) {
             selectedStores.add("Othaim");
         }
-
         // Prepare a map for the updates using updateChildren
         Map<String, Object> updateMap = new HashMap<>();
         updateMap.put("stores", selectedStores);
-
         // Update the "stores" child node in Firebase using updateChildren
         orderReference.updateChildren(updateMap)
-                .addOnSuccessListener(aVoid ->
-                        Toast.makeText(MapsActivityJeddah.this, "Stores updated successfully", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e ->
-                        Toast.makeText(MapsActivityJeddah.this, "Failed to update stores: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("MapsActivityJeddah", "Stores updated successfully: " + selectedStores);
+                    Toast.makeText(MapsActivityJeddah.this, "Stores updated successfully", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("MapsActivityJeddah", "Failed to update stores", e);
+                    Toast.makeText(MapsActivityJeddah.this, "Failed to update stores: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
 

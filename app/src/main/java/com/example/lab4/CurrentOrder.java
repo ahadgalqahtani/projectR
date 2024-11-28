@@ -7,6 +7,7 @@ import android.widget.ToggleButton;
 import android.widget.Toast;
 import android.os.Handler;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -17,11 +18,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import androidx.appcompat.app.AlertDialog;
 
+import java.util.Objects;
+
 public class CurrentOrder extends AppCompatActivity {
     private TextView orderDetailsTextView;
     private ToggleButton toggleStatus;
     private DatabaseReference orderReference;
-    private String currentOrderId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +31,7 @@ public class CurrentOrder extends AppCompatActivity {
         setContentView(R.layout.activity_current_order);
 
         // Get the orderId passed from DriverActivity
-        currentOrderId = getIntent().getStringExtra("orderId");
+        String currentOrderId = getIntent().getStringExtra("orderId");
         if (currentOrderId == null) {
             Toast.makeText(this, "No order ID provided", Toast.LENGTH_SHORT).show();
             finish();
@@ -43,7 +45,7 @@ public class CurrentOrder extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Current Order");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Current Order");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Fix: Update Firebase reference to match Driver activity
@@ -59,12 +61,8 @@ public class CurrentOrder extends AppCompatActivity {
                 new AlertDialog.Builder(this)
                         .setTitle("Confirm Completion")
                         .setMessage("Are you sure you want to mark this order as completed?")
-                        .setPositiveButton("Yes", (dialog, which) -> {
-                            updateOrderStatus("Completed");
-                        })
-                        .setNegativeButton("No", (dialog, which) -> {
-                            toggleStatus.setChecked(false);
-                        })
+                        .setPositiveButton("Yes", (dialog, which) -> updateOrderStatus("Completed"))
+                        .setNegativeButton("No", (dialog, which) -> toggleStatus.setChecked(false))
                         .show();
             } else {
                 updateOrderStatus("In Progress");
@@ -81,7 +79,7 @@ public class CurrentOrder extends AppCompatActivity {
     private void loadOrderDetails() {
         orderReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     OrderData order = snapshot.getValue(OrderData.class);
                     if (order != null) {
@@ -108,7 +106,7 @@ public class CurrentOrder extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(CurrentOrder.this, "Failed to load order details", Toast.LENGTH_SHORT).show();
             }
         });

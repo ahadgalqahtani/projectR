@@ -27,8 +27,6 @@ public class Order extends AppCompatActivity {
     private EditText editTextOrderId, editTextDeliveryDate, editTextCustomerDetails,
             editTextOrderAmount, editTextOrderWeight;
     private Spinner spinnerAssignDriver, spinnerCity;
-    private Button buttonSubmitOrder;
-    private DatabaseReference databaseReference;
     private ArrayAdapter<String> driverAdapter;
     private ArrayList<String> driverList;
 
@@ -45,10 +43,10 @@ public class Order extends AppCompatActivity {
         editTextOrderWeight = findViewById(R.id.editTextOrderWeight);
         spinnerAssignDriver = findViewById(R.id.AssignDriverSpinner);
         spinnerCity = findViewById(R.id.spinnerCity);
-        buttonSubmitOrder = findViewById(R.id.buttonSubmitOrder);
+        Button buttonSubmitOrder = findViewById(R.id.buttonSubmitOrder);
 
         // Initialize Firebase Database reference
-        databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
         driverList = new ArrayList<>();
         driverAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, driverList);
         driverAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -93,14 +91,16 @@ public class Order extends AppCompatActivity {
             }
 
             String status = "In Progress";
-            List<String> stores= Arrays.asList("1", "2", "3");;
+            List<String> stores = Arrays.asList("1", "2", "3");
+
             // Create an OrderData object
             OrderData orderData = new OrderData(orderId, deliveryDate, customerDetails,
                     orderAmount, orderWeight,
                     assignedDriver, city, status, stores);
 
-            // Save the order to the database
-            saveOrderToDatabase(orderId, orderData);
+            // Start view order activity
+            Intent intent = new Intent(Order.this, ViewOrder.class);
+            startActivity(intent);
         });
 
         // Spinner listeners
@@ -123,6 +123,22 @@ public class Order extends AppCompatActivity {
                 }
 
                 String selectedCity = parent.getItemAtPosition(position).toString();
+                String orderId = editTextOrderId.getText().toString();
+                OrderData orderData = new OrderData(
+                        orderId,
+                        editTextDeliveryDate.getText().toString(),
+                        editTextCustomerDetails.getText().toString(),
+                        editTextOrderAmount.getText().toString(),
+                        editTextOrderWeight.getText().toString(),
+                        spinnerAssignDriver.getSelectedItem().toString(),
+                        selectedCity,
+                        "In Progress",
+                        Arrays.asList("1", "2", "3")
+                );
+
+                // Save the order to the database before starting the city-specific activity
+                saveOrderToDatabase(orderId, orderData);
+
                 Intent intent;
                 if (selectedCity.equals("Jeddah")) {
                     intent = new Intent(Order.this, MapsActivityJeddah.class);
@@ -133,7 +149,6 @@ public class Order extends AppCompatActivity {
                 }
 
                 // Pass the orderId to the respective city activity
-                String orderId = editTextOrderId.getText().toString();
                 intent.putExtra("orderId", orderId);
 
                 // Start the city-specific activity
@@ -143,35 +158,18 @@ public class Order extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
-
     }
 
     private void saveOrderToDatabase(String orderId, OrderData orderData) {
         // Get reference to the "order" node in Firebase
         DatabaseReference orderReference = FirebaseDatabase.getInstance().getReference("order");
 
-        // Save the order data to Firebase under the orderId, including stores as null
+        // Save the order data to Firebase under the orderId
         orderReference.child(orderId).setValue(orderData)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         // Show a success message
                         Toast.makeText(Order.this, "Order saved successfully!", Toast.LENGTH_SHORT).show();
-
-                        // Create an intent to open ViewOrder activity
-                        Intent intent = new Intent(Order.this, ViewOrder.class);
-                        intent.putExtra("orderId", orderData.getOrderId());
-                        intent.putExtra("deliveryDate", orderData.getDeliveryDate());
-                        intent.putExtra("customerDetails", orderData.getCustomerDetails());
-                        intent.putExtra("orderAmount", orderData.getOrderAmount());
-                        intent.putExtra("orderWeight", orderData.getOrderWeight());
-                        intent.putExtra("assignedDriver", orderData.getAssignedDriver());
-                        intent.putExtra("city", orderData.getCity());
-
-                        // Start the ViewOrder activity
-                        startActivity(intent);
-
-                        // Optionally, close the current activity (Order activity)
-                        finish();
                     } else {
                         // Show a failure message
                         Toast.makeText(Order.this, "Failed to save order", Toast.LENGTH_SHORT).show();
