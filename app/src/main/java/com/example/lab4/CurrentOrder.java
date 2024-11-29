@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,19 +20,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import androidx.appcompat.app.AlertDialog;
 
+import java.util.List;
 import java.util.Objects;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 public class CurrentOrder extends AppCompatActivity implements OnMapReadyCallback {
     private TextView orderDetailsTextView;
     private ToggleButton toggleStatus;
     private DatabaseReference orderReference;
     private GoogleMap googleMap;
+    private String orderCity; // To store the city from the order details
+    private boolean isMapReady = false; // Flag to check if map is ready
+    private boolean isCityLoaded = false; // Flag to check if city data is loaded
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,29 +47,32 @@ public class CurrentOrder extends AppCompatActivity implements OnMapReadyCallbac
             Toast.makeText(this, "No order ID provided", Toast.LENGTH_SHORT).show();
             finish();
             return;
-
         }
 
         // Initialize views
         orderDetailsTextView = findViewById(R.id.tv_order_details);
         toggleStatus = findViewById(R.id.toggle_status);
 
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Current Order");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Fix: Update Firebase reference to match Driver activity
+        // Firebase reference
         orderReference = FirebaseDatabase.getInstance().getReference("order").child(currentOrderId);
 
         // Load order details
         loadOrderDetails();
 
+        // Setup Google Maps
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
+
         // Handle toggle button changes
         toggleStatus.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                // Show confirmation dialog before marking as completed
                 new AlertDialog.Builder(this)
                         .setTitle("Confirm Completion")
                         .setMessage("Are you sure you want to mark this order as completed?")
@@ -98,14 +105,20 @@ public class CurrentOrder extends AppCompatActivity implements OnMapReadyCallbac
                                 "\nAmount: " + order.getOrderAmount() +
                                 "\nWeight: " + order.getOrderWeight() +
                                 "\nCity: " + order.getCity() +
+                                "\nStores: " + order.getStores() +
                                 "\nStatus: " + order.getStatus();
                         orderDetailsTextView.setText(details);
 
-                        // Set the toggle button state based on the order status
-                        toggleStatus.setChecked("Completed".equals(order.getStatus()));
+                        // Save the city and stores
+                        orderCity = order.getCity();
+                        List<String> stores = order.getStores();
+                        isCityLoaded = true;
 
-                        // Disable toggle if order is already completed
-                        toggleStatus.setEnabled(!"Completed".equals(order.getStatus()));
+                        // Load store locations
+                        loadStoreLocations(orderCity, stores);
+
+                        // Center map on city if needed
+                        centerMapOnCity();
                     }
                 } else {
                     Toast.makeText(CurrentOrder.this, "Order not found", Toast.LENGTH_SHORT).show();
@@ -120,17 +133,60 @@ public class CurrentOrder extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    private void loadStoreLocations(String city, List<String> stores) {
+        if (city == null || stores == null || stores.isEmpty()) {
+            Toast.makeText(this, "City or stores information is missing", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DatabaseReference locationsReference = FirebaseDatabase.getInstance().getReference("locations").child(city);
+
+        locationsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (String store : stores) {
+                        String storeKey = store.toLowerCase(); // Convert store name to lowercase
+                        DataSnapshot storeSnapshot = snapshot.child(storeKey);
+                        if (storeSnapshot.exists()) {
+                            Double latitude = storeSnapshot.child("latitude").getValue(Double.class);
+                            Double longitude = storeSnapshot.child("longitude").getValue(Double.class);
+
+                            if (latitude != null && longitude != null) {
+                                LatLng storeLocation = new LatLng(latitude, longitude);
+                                // Add marker for the store on the map
+                                if (googleMap != null) {
+                                    googleMap.addMarker(new MarkerOptions()
+                                            .position(storeLocation)
+                                            .title(store));
+                                }
+                            } else {
+                                Toast.makeText(CurrentOrder.this, "Coordinates missing for store: " + store, Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(CurrentOrder.this, "Store not found in database: " + store, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } else {
+                    Toast.makeText(CurrentOrder.this, "City not found in locations database: " + city, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(CurrentOrder.this, "Failed to load store locations", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void updateOrderStatus(String status) {
         orderReference.child("status").setValue(status)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         if ("Completed".equals(status)) {
                             Toast.makeText(this, "Order Completed", Toast.LENGTH_SHORT).show();
-
-                            // Clear the static currentOrderId in Driver class
                             Driver.currentOrderId = null;
 
-                            // Add a small delay before returning
                             new Handler().postDelayed(() -> {
                                 Intent intent = new Intent(CurrentOrder.this, Driver.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -147,12 +203,28 @@ public class CurrentOrder extends AppCompatActivity implements OnMapReadyCallbac
                 });
     }
 
-    public void onMapReady(GoogleMap map) {
+    @Override
+    public void onMapReady(@NonNull GoogleMap map) {
         googleMap = map;
+        isMapReady = true;
+        centerMapOnCity();
+    }
 
-        // Example: Set a marker based on sample coordinates
-        LatLng sampleLocation = new LatLng(37.7749, -122.4194); // Replace with actual order location
-        googleMap.addMarker(new MarkerOptions().position(sampleLocation).title("Delivery Location"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sampleLocation, 12));
+    private void centerMapOnCity() {
+        if (isMapReady && isCityLoaded) {
+            LatLng targetLocation;
+            switch (orderCity.toLowerCase()) {
+                case "jeddah":
+                    targetLocation = new LatLng(21.4858, 39.1925);
+                    break;
+                case "makkah":
+                    targetLocation = new LatLng(21.3891, 39.8579);
+                    break;
+                default:
+                    Toast.makeText(this, "City not recognized: " + orderCity, Toast.LENGTH_SHORT).show();
+                    return;
+            }
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(targetLocation, 8));
+        }
     }
 }

@@ -38,7 +38,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAjylGIFaJGEQoxYKqkjBday1w1_uNPgZQ" />
+            android:value="AIzaSyCdzVfWgQuX3v4L1lqG0BJpCvFOvUvkHfQ" />
 
         <activity
             android:name=".MapsActivityMakkah"
