@@ -19,11 +19,18 @@ import com.google.firebase.database.ValueEventListener;
 import androidx.appcompat.app.AlertDialog;
 
 import java.util.Objects;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-public class CurrentOrder extends AppCompatActivity {
+public class CurrentOrder extends AppCompatActivity implements OnMapReadyCallback {
     private TextView orderDetailsTextView;
     private ToggleButton toggleStatus;
     private DatabaseReference orderReference;
+    private GoogleMap googleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +43,7 @@ public class CurrentOrder extends AppCompatActivity {
             Toast.makeText(this, "No order ID provided", Toast.LENGTH_SHORT).show();
             finish();
             return;
+
         }
 
         // Initialize views
@@ -137,5 +145,14 @@ public class CurrentOrder extends AppCompatActivity {
                         toggleStatus.setChecked(!toggleStatus.isChecked()); // Revert toggle state
                     }
                 });
+    }
+
+    public void onMapReady(GoogleMap map) {
+        googleMap = map;
+
+        // Example: Set a marker based on sample coordinates
+        LatLng sampleLocation = new LatLng(37.7749, -122.4194); // Replace with actual order location
+        googleMap.addMarker(new MarkerOptions().position(sampleLocation).title("Delivery Location"));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sampleLocation, 12));
     }
 }
