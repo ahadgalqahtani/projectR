@@ -1,16 +1,8 @@
 package com.example.lab4;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 import android.widget.Toast;
-import android.os.Handler;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -18,40 +10,38 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import androidx.appcompat.app.AlertDialog;
-
-import java.util.List;
-import java.util.Objects;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
 
-public class CurrentOrder extends AppCompatActivity implements OnMapReadyCallback {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+public class CurrentOrder extends AppCompatActivity implements OnMapReadyCallback
+{
     private TextView orderDetailsTextView;
-    private ToggleButton toggleStatus;
-    private DatabaseReference orderReference;
     private GoogleMap googleMap;
-    private String orderCity; // To store the city from the order details
-    private boolean isMapReady = false; // Flag to check if map is ready
-    private boolean isCityLoaded = false; // Flag to check if city data is loaded
+    private String orderCity;
+    private boolean isMapReady = false;
+    private boolean isCityLoaded = false;
+
+    // Coordinates for Al Faisaliah (starting point)
+    private static final LatLng AL_FAISALIAH = new LatLng(21.5798559, 39.1806253);
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_current_order);
 
-        // Get the orderId passed from DriverActivity
-        String currentOrderId = getIntent().getStringExtra("orderId");
-        if (currentOrderId == null) {
-            Toast.makeText(this, "No order ID provided", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
-
         // Initialize views
         orderDetailsTextView = findViewById(R.id.tv_order_details);
-        toggleStatus = findViewById(R.id.toggle_status);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -59,66 +49,47 @@ public class CurrentOrder extends AppCompatActivity implements OnMapReadyCallbac
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Firebase reference
-        orderReference = FirebaseDatabase.getInstance().getReference("order").child(currentOrderId);
+        String currentOrderId = getIntent().getStringExtra("orderId");
+        if (currentOrderId == null) {
+            Toast.makeText(this, "No order ID provided", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
-        // Load order details
-        loadOrderDetails();
+        DatabaseReference orderReference = FirebaseDatabase.getInstance().getReference("order").child(currentOrderId);
+        loadOrderDetails(orderReference);
 
         // Setup Google Maps
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
-
-        // Handle toggle button changes
-        toggleStatus.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                new AlertDialog.Builder(this)
-                        .setTitle("Confirm Completion")
-                        .setMessage("Are you sure you want to mark this order as completed?")
-                        .setPositiveButton("Yes", (dialog, which) -> updateOrderStatus("Completed"))
-                        .setNegativeButton("No", (dialog, which) -> toggleStatus.setChecked(false))
-                        .show();
-            } else {
-                updateOrderStatus("In Progress");
-            }
-        });
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
+    public boolean onSupportNavigateUp()
+    {
         onBackPressed();
         return true;
     }
 
-    private void loadOrderDetails() {
+    private void loadOrderDetails(DatabaseReference orderReference)
+    {
         orderReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     OrderData order = snapshot.getValue(OrderData.class);
                     if (order != null) {
-                        // Display order details
-                        String details = "Order ID: " + order.getOrderId() +
-                                "\nDelivery Date: " + order.getDeliveryDate() +
-                                "\nCustomer: " + order.getCustomerDetails() +
-                                "\nAmount: " + order.getOrderAmount() +
-                                "\nWeight: " + order.getOrderWeight() +
-                                "\nCity: " + order.getCity() +
-                                "\nStores: " + order.getStores() +
-                                "\nStatus: " + order.getStatus();
-                        orderDetailsTextView.setText(details);
-
-                        // Save the city and stores
                         orderCity = order.getCity();
                         List<String> stores = order.getStores();
                         isCityLoaded = true;
 
+                        // Display order details in the TextView
+                        displayOrderDetails(order);
+
                         // Load store locations
                         loadStoreLocations(orderCity, stores);
-
-                        // Center map on city if needed
-                        centerMapOnCity();
                     }
                 } else {
                     Toast.makeText(CurrentOrder.this, "Order not found", Toast.LENGTH_SHORT).show();
@@ -133,7 +104,23 @@ public class CurrentOrder extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    private void loadStoreLocations(String city, List<String> stores) {
+    private void displayOrderDetails(OrderData order)
+    {
+        // Display order details in the TextView
+        String orderDetails = "Order ID: " + order.getOrderId() +
+                "\nDelivery Date: " + order.getDeliveryDate() +
+                "\nCustomer: " + order.getCustomerDetails() +
+                "\nAmount: " + order.getOrderAmount() +
+                "\nWeight: " + order.getOrderWeight() +
+                "\nCity: " + order.getCity() +
+                "\nStores: " + order.getStores() +
+                "\nStatus: " + order.getStatus();
+
+        orderDetailsTextView.setText(orderDetails);
+    }
+
+    private void loadStoreLocations(String city, List<String> stores)
+    {
         if (city == null || stores == null || stores.isEmpty()) {
             Toast.makeText(this, "City or stores information is missing", Toast.LENGTH_SHORT).show();
             return;
@@ -141,12 +128,16 @@ public class CurrentOrder extends AppCompatActivity implements OnMapReadyCallbac
 
         DatabaseReference locationsReference = FirebaseDatabase.getInstance().getReference("locations").child(city);
 
-        locationsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        locationsReference.addListenerForSingleValueEvent(new ValueEventListener()
+        {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    List<Store> storeLocations = new ArrayList<>();
+
+                    // Loop through stores to get their locations
                     for (String store : stores) {
-                        String storeKey = store.toLowerCase(); // Convert store name to lowercase
+                        String storeKey = store.toLowerCase();
                         DataSnapshot storeSnapshot = snapshot.child(storeKey);
                         if (storeSnapshot.exists()) {
                             Double latitude = storeSnapshot.child("latitude").getValue(Double.class);
@@ -154,77 +145,98 @@ public class CurrentOrder extends AppCompatActivity implements OnMapReadyCallbac
 
                             if (latitude != null && longitude != null) {
                                 LatLng storeLocation = new LatLng(latitude, longitude);
-                                // Add marker for the store on the map
-                                if (googleMap != null) {
-                                    googleMap.addMarker(new MarkerOptions()
-                                            .position(storeLocation)
-                                            .title(store));
-                                }
-                            } else {
-                                Toast.makeText(CurrentOrder.this, "Coordinates missing for store: " + store, Toast.LENGTH_SHORT).show();
+                                double distance = calculateDistance(AL_FAISALIAH, storeLocation);
+                                storeLocations.add(new Store(store, storeLocation, distance));
                             }
-                        } else {
-                            Toast.makeText(CurrentOrder.this, "Store not found in database: " + store, Toast.LENGTH_SHORT).show();
                         }
                     }
-                } else {
+
+                    // Sort stores by distance
+                    storeLocations.sort((s1, s2) -> Double.compare(s1.distance, s2.distance));
+
+                    // Now, draw the path from Al Faisaliah to each store
+                    drawPath(storeLocations);
+                }
+                else
+                {
                     Toast.makeText(CurrentOrder.this, "City not found in locations database: " + city, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error)
+            {
                 Toast.makeText(CurrentOrder.this, "Failed to load store locations", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void updateOrderStatus(String status) {
-        orderReference.child("status").setValue(status)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        if ("Completed".equals(status)) {
-                            Toast.makeText(this, "Order Completed", Toast.LENGTH_SHORT).show();
-                            Driver.currentOrderId = null;
+    private void drawPath(List<Store> storeLocations)
+    {
+        if (googleMap != null) {
+            PolylineOptions polylineOptions = new PolylineOptions()
+                    .width(10)
+                    .color(0xFF0000FF); // Blue color for the line
 
-                            new Handler().postDelayed(() -> {
-                                Intent intent = new Intent(CurrentOrder.this, Driver.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
-                                finish();
-                            }, 1000);
-                        } else {
-                            Toast.makeText(this, "Order status updated to " + status, Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(this, "Failed to update order status", Toast.LENGTH_SHORT).show();
-                        toggleStatus.setChecked(!toggleStatus.isChecked()); // Revert toggle state
-                    }
-                });
+            // Start the polyline from Al Faisaliah
+            polylineOptions.add(AL_FAISALIAH);
+
+            // Add store locations in order of proximity
+            for (Store store : storeLocations) {
+                googleMap.addMarker(new MarkerOptions()
+                        .position(store.location)
+                        .title(store.name));
+                polylineOptions.add(store.location);
+            }
+
+            googleMap.addPolyline(polylineOptions);
+
+            // Move camera to Al Faisaliah
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(AL_FAISALIAH, 12));
+        }
+    }
+
+    private double calculateDistance(LatLng start, LatLng end) {
+        // Haversine formula to calculate the distance between two points
+        double lat1 = start.latitude;
+        double lon1 = start.longitude;
+        double lat2 = end.latitude;
+        double lon2 = end.longitude;
+
+        final int R = 6371; // Earth radius in kilometers
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = R * c; // Distance in kilometers
+        return distance;
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap map) {
         googleMap = map;
         isMapReady = true;
-        centerMapOnCity();
+
+        // Center map on Al Faisaliah if city is loaded
+        if (isMapReady && isCityLoaded) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(AL_FAISALIAH, 12));
+        }
     }
 
-    private void centerMapOnCity() {
-        if (isMapReady && isCityLoaded) {
-            LatLng targetLocation;
-            switch (orderCity.toLowerCase()) {
-                case "jeddah":
-                    targetLocation = new LatLng(21.4858, 39.1925);
-                    break;
-                case "makkah":
-                    targetLocation = new LatLng(21.3891, 39.8579);
-                    break;
-                default:
-                    Toast.makeText(this, "City not recognized: " + orderCity, Toast.LENGTH_SHORT).show();
-                    return;
-            }
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(targetLocation, 8));
+    // Store class to represent store data with its location and distance
+    private static class Store {
+        String name;
+        LatLng location;
+        double distance;
+
+        Store(String name, LatLng location, double distance) {
+            this.name = name;
+            this.location = location;
+            this.distance = distance;
         }
     }
 }
+
