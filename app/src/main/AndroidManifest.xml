@@ -20,9 +20,6 @@
             android:name=".Driver"
             android:exported="false" />
         <activity
-            android:name=".Navigation"
-            android:exported="false" />
-        <activity
             android:name=".Profile"
             android:exported="false" />
         <activity
