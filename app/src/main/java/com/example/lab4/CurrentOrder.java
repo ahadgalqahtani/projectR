@@ -3,6 +3,8 @@ package com.example.lab4;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton; // Add this import
+import androidx.appcompat.app.AlertDialog; // Add this import
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -18,7 +20,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +31,7 @@ public class CurrentOrder extends AppCompatActivity implements OnMapReadyCallbac
     private String orderCity;
     private boolean isMapReady = false;
     private boolean isCityLoaded = false;
+    private ToggleButton toggleStatus; // Declare the ToggleButton
 
     // Coordinates for Al Faisaliah (starting point)
     private static final LatLng AL_FAISALIAH = new LatLng(21.5798559, 39.1806253);
@@ -42,6 +44,7 @@ public class CurrentOrder extends AppCompatActivity implements OnMapReadyCallbac
 
         // Initialize views
         orderDetailsTextView = findViewById(R.id.tv_order_details);
+        toggleStatus = findViewById(R.id.toggle_status); // Initialize ToggleButton
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -64,6 +67,20 @@ public class CurrentOrder extends AppCompatActivity implements OnMapReadyCallbac
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
+
+        // Handle toggle button changes
+        toggleStatus.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                new AlertDialog.Builder(this)
+                        .setTitle("Confirm Completion")
+                        .setMessage("Are you sure you want to mark this order as completed?")
+                        .setPositiveButton("Yes", (dialog, which) -> updateOrderStatus("Completed"))
+                        .setNegativeButton("No", (dialog, which) -> toggleStatus.setChecked(false))
+                        .show();
+            } else {
+                updateOrderStatus("In Progress");
+            }
+        });
     }
 
     @Override
@@ -220,10 +237,29 @@ public class CurrentOrder extends AppCompatActivity implements OnMapReadyCallbac
         googleMap = map;
         isMapReady = true;
 
+
+        googleMap.addMarker(new MarkerOptions()
+                .position(AL_FAISALIAH)
+                .title("Start Here"));
+
         // Center map on Al Faisaliah if city is loaded
         if (isMapReady && isCityLoaded) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(AL_FAISALIAH, 12));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(AL_FAISALIAH, 10));
         }
+    }
+
+    // Method to update order status in the database
+    private void updateOrderStatus(String status) {
+        String currentOrderId = getIntent().getStringExtra("orderId");
+        DatabaseReference orderReference = FirebaseDatabase.getInstance().getReference("order").child(currentOrderId);
+        orderReference.child("status").setValue(status)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(CurrentOrder.this, "Order status updated to: " + status, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(CurrentOrder.this, "Failed to update order status", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     // Store class to represent store data with its location and distance
@@ -239,4 +275,3 @@ public class CurrentOrder extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 }
-
